@@ -1,0 +1,14 @@
+{% extends "master.html" %}
+
+{% block title %}
+Details about "{{ expense.item }}"
+{% endblock %}
+
+{% block content %}
+<div class="mycard">
+	<h1>{{ expense.item }}</h1>
+	<p>Description: {{ expense.description | default:"--" }}</p>
+	<p>Created: {{ expense.created_at }} UTC</p>
+	<p>Updated: {{ expense.updated_at }} UTC</p>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "master.html" %}
+
+{% block title %}
+List of all expenses
+{% endblock %}
+
+{% block content %}
+<div class="mycard">
+<ul>
+	{% for x in expenses %}
+	<a href="details/{{ x.id }}"><li>{{ x.item }} - {{ x.user_name }}</li></a>
+	{% endfor %}
+</ul>
+</div>
+<div>
+	<form method="post">{% csrf_token %}
+		<fieldset>
+			<legend>Enter your expense</legend>
+			<p>
+			<label for="item">Item</label>
+			<input type="text" id="item" name="item" required />
+			</p>
+			<p>
+			<label for="cost">Cost</label>
+			<input type="number" id="cost" name="cost" step="0.1" required />
+			</p>
+			<p>
+			<label for="userName">Who Are You?</label>
+			<input type="text" id="userName" name="userName" autocomplete="off" />
+			</p>
+		</fieldset>
+		<p>
+		<button type="submit">Add Expense</button>
+		</p>
+	</form>
+</div>
+{% endblock %}
