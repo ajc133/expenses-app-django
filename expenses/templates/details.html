@@ -8,6 +8,7 @@ Details about "{{ expense.item }}"
 <div class="mycard">
 	<h1>{{ expense.item }}</h1>
 	<p>Description: {{ expense.description | default:"--" }}</p>
+	<p>Bought by: {{ expense.user_name }}</p>
 	<p>Created: {{ expense.created_at }} UTC</p>
 	<p>Updated: {{ expense.updated_at }} UTC</p>
 </div>

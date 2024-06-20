@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, HttpResponseNotFound
 from django.template import loader
 from django.views.decorators.http import require_http_methods, require_safe
 from .models import Expense, User
@@ -9,9 +9,9 @@ def expenses(request: HttpRequest):
         form = request.POST
         item = form.get("item")
         cost = form.get("cost")
-        userName = form.get("userName")
-        user = User.objects.get(name=userName)
-        Expense(user=user,item=item,cost=cost).save()
+        user_name = form.get("userName")
+        if not Expense.create_expense(item, cost, user_name):
+            return HttpResponseNotFound(b"User does not exist")
 
     expenses = Expense.objects.all().values()
     for expense in expenses:
@@ -23,7 +23,8 @@ def expenses(request: HttpRequest):
 
 @require_safe
 def details(request: HttpRequest, id):
-    expense = Expense.objects.get(id=id)
+    expense = Expense.objects.get(id=id).value()
+    expense["user_name"] = User.objects.get(id=expense["user_id"])
     template = loader.get_template("details.html")
     context = {"expense": expense}
     return HttpResponse(template.render(context, request))
