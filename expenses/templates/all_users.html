@@ -1,0 +1,17 @@
+{% extends "master.html" %}
+
+{% block title %}
+Users
+{% endblock %}
+
+{% block content %}
+<div class="mycard">
+	<ul>
+		{% for x in users %}
+		<a href="details/{{ x.id }}">
+			<li>{{ x.name }}</li>
+		</a>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock %}

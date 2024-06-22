@@ -24,11 +24,27 @@ def expenses(request: HttpRequest):
 
 
 @require_safe
-def details(request: HttpRequest, id):
+def expense_details(request: HttpRequest, id):
     expense = Expense.objects.get(id=id)
     user_name = User.objects.get(id=expense.user.id)
-    template = loader.get_template("details.html")
+    template = loader.get_template("expense_details.html")
     context = {"expense": expense, "user_name": user_name}
+    return HttpResponse(template.render(context, request))
+
+
+@require_safe
+def users(request: HttpRequest):
+    users = User.objects.all().values()
+    template = loader.get_template("all_users.html")
+    context = {"users": users}
+    return HttpResponse(template.render(context, request))
+
+
+@require_safe
+def user_details(request: HttpRequest, id):
+    user = User.objects.get(id=id)
+    template = loader.get_template("user_details.html")
+    context = {"user": user}
     return HttpResponse(template.render(context, request))
 
 
