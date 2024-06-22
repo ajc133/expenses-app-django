@@ -43,8 +43,9 @@ def users(request: HttpRequest):
 @require_safe
 def user_details(request: HttpRequest, id):
     user = User.objects.get(id=id)
+    user_expenses = user.expense_set.all().values()
     template = loader.get_template("user_details.html")
-    context = {"user": user}
+    context = {"user": user, "expenses": user_expenses}
     return HttpResponse(template.render(context, request))
 
 

@@ -7,6 +7,22 @@
 {% block content %}
 <div class="mycard">
 	<h1>{{ user.name }}</h1>
-	<p>Joined on: {{ user.created_at }}</p>
+	<h2>Expenses</h2>
+	<table>
+		<thead>
+			<th>Item</th>
+			<th>Cost</th>
+			<th>Added On</th>
+		</thead>
+		<tr>
+			{% for expense in expenses %}
+		<tr>
+			<td>{{ expense.item }}</td>
+			<td>{{ expense.cost }}</td>
+			<td>{{ expense.created_at|date:"F j" }}</td>
+		</tr>
+		{% endfor %}
+		</tr>
+	</table>
 </div>
 {% endblock %}

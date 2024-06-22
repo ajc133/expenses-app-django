@@ -6,11 +6,26 @@ List of all expenses
 
 {% block content %}
 <div class="mycard">
-<ul>
+<table>
+	<thead>
+		<th>Item</th>
+		<th>Cost</th>
+		<th>Bought by</th>
+		<th>Date</th>
+		<th>Details</th>
+	</thead>
+	<tbody>
 	{% for x in expenses %}
-	<a href="details/{{ x.id }}"><li>{{ x.item }} - {{ x.user_name }}</li></a>
+	<tr>
+		<td>{{ x.item }}</td>
+		<td>{{ item.cost }}</td>
+		<td>{{ x.user_name }}</td>
+		<td>{{ x.created_at|date:"F j" }}</td>
+		<td><a href="details/{{ x.id }}">Details</a></td>
+	</tr>
 	{% endfor %}
-</ul>
+	</tbody>
+</table>
 </div>
 <div class="mycard">
 	<form method="post">{% csrf_token %}
