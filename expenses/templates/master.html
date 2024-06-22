@@ -13,7 +13,17 @@
 		<a href="{% url 'main' %}">HOME</a> |
 		<a href="{% url 'expenses' %}">EXPENSES</a> |
 		<a href="{% url 'users' %}">USERS</a> |
+		{% if user.is_authenticated %}
+		Welcome, {{ user.username }} |
+		<form name="logout_form" action="{% url 'logout' %}" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="perform_logout" value="1">
+			<input type="submit" value="Logout" id="perform_logout_button">
+			<a href="#" style="display:none;" id="logout_link">Logout</a>
+		</form> |
+		{% else %}
 		<a href="{% url 'login' %}">LOGIN</a> |
+		{% endif %}
 	</div>
 
 
