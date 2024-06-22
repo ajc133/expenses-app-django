@@ -30,3 +30,15 @@ class Expense(models.Model):
 
     def __str__(self):
         return f"{self.item}"
+
+
+class Payment(models.Model):
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="payments_sent"
+    )
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="payments_received"
+    )
+    amount = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
