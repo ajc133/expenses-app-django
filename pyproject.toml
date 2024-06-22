@@ -15,6 +15,7 @@ whitenoise = "^6.6.0"
 pylsp-mypy = "^0.6.8"
 python-lsp-black = "^2.0.0"
 django-stubs = {extras = ["compatible-mypy"], version = "^5.0.2"}
+flake8 = "^7.1.0"
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main"]
