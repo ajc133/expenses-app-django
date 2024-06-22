@@ -7,4 +7,3 @@ urlpatterns = [
     path("expenses/details/<int:id>", views.details, name="details"),
     path("testing/", views.testing, name="testing"),
 ]
-

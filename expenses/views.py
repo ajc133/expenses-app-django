@@ -3,6 +3,7 @@ from django.template import loader
 from django.views.decorators.http import require_http_methods, require_safe
 from .models import Expense, User
 
+
 @require_http_methods(["GET", "POST"])
 def expenses(request: HttpRequest):
     if request.method == "POST":
@@ -21,18 +22,21 @@ def expenses(request: HttpRequest):
     context = {"expenses": expenses}
     return HttpResponse(template.render(context, request))
 
+
 @require_safe
 def details(request: HttpRequest, id):
-    expense = Expense.objects.get(id=id).value()
-    expense["user_name"] = User.objects.get(id=expense["user_id"])
+    expense = Expense.objects.get(id=id)
+    user_name = User.objects.get(id=expense.user.id)
     template = loader.get_template("details.html")
-    context = {"expense": expense}
+    context = {"expense": expense, "user_name": user_name}
     return HttpResponse(template.render(context, request))
+
 
 @require_safe
 def main(request: HttpRequest):
     template = loader.get_template("main.html")
     return HttpResponse(template.render())
+
 
 def testing(request: HttpRequest):
     expenses = Expense.objects.all().values()
