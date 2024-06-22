@@ -14,6 +14,13 @@ whitenoise = "^6.6.0"
 [tool.poetry.group.dev.dependencies]
 pylsp-mypy = "^0.6.8"
 python-lsp-black = "^2.0.0"
+django-stubs = {extras = ["compatible-mypy"], version = "^5.0.2"}
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "splitwyze.settings"
 
 [build-system]
 requires = ["poetry-core"]
