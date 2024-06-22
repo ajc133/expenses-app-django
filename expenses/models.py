@@ -19,11 +19,11 @@ class Expense(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     @classmethod
-    def create_expense(cls, item, cost, user_name) -> bool:
+    def create_expense(cls, item: str, cost: float, user_id: int) -> bool:
         try:
-            user = User.objects.filter(name=user_name).get()
+            user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            print(f"User '{user_name}' does not exist")
+            print(f"User id '{user_id}' does not exist")
             return False
         cls(user=user, item=item, cost=cost).save()
         return True

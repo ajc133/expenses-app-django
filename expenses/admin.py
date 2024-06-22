@@ -3,7 +3,7 @@ from .models import Expense, User, Payment
 
 
 class ExpenseAdmin(admin.ModelAdmin):
-    list_display = ("item", "description", "cost", "created_at", "updated_at")
+    list_display = ("item", "user", "description", "cost", "created_at", "updated_at")
 
 
 class UserAdmin(admin.ModelAdmin):

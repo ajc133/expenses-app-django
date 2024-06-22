@@ -10,16 +10,20 @@ def expenses(request: HttpRequest):
         form = request.POST
         item = form.get("item")
         cost = form.get("cost")
-        user_name = form.get("userName")
-        if not Expense.create_expense(item, cost, user_name):
+        user_id = form.get("user-id")
+        if not Expense.create_expense(item, cost, user_id):
             return HttpResponseNotFound(b"User does not exist")
 
     expenses = Expense.objects.all().values()
+    all_users = User.objects.all().values()
+
+    # TODO: Figure out join query instead of this
     for expense in expenses:
         user_name = User.objects.get(id=expense["user_id"])
         expense["user_name"] = user_name
+
     template = loader.get_template("all_expenses.html")
-    context = {"expenses": expenses}
+    context = {"expenses": expenses, "users": all_users}
     return HttpResponse(template.render(context, request))
 
 

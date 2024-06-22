@@ -14,8 +14,9 @@
 			<th>Cost</th>
 			<th>Added On</th>
 		</thead>
+		<tbody>
 		<tr>
-			{% for expense in expenses %}
+		{% for expense in expenses %}
 		<tr>
 			<td>{{ expense.item }}</td>
 			<td>{{ expense.cost }}</td>
@@ -23,6 +24,7 @@
 		</tr>
 		{% endfor %}
 		</tr>
+		</tbody>
 	</table>
 </div>
 {% endblock %}

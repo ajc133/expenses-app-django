@@ -18,7 +18,7 @@ List of all expenses
 	{% for x in expenses %}
 	<tr>
 		<td>{{ x.item }}</td>
-		<td>{{ item.cost }}</td>
+		<td>${{ x.cost|floatformat:"-2" }}</td>
 		<td>{{ x.user_name }}</td>
 		<td>{{ x.created_at|date:"F j" }}</td>
 		<td><a href="details/{{ x.id }}">Details</a></td>
@@ -30,18 +30,23 @@ List of all expenses
 <div class="mycard">
 	<form method="post">{% csrf_token %}
 		<fieldset>
-			<legend>Enter your expense</legend>
+			<legend>Enter expense</legend>
 			<p>
 			<label for="item">Item</label>
 			<input type="text" id="item" name="item" required />
 			</p>
 			<p>
 			<label for="cost">Cost</label>
-			<input type="number" id="cost" name="cost" step="0.1" required />
+			<input type="number" id="cost" name="cost" step="0.01" required />
 			</p>
 			<p>
-			<label for="userName">Who Are You?</label>
-			<input type="text" id="userName" name="userName" autocomplete="off" />
+			<label for="user-name-select">Who paid?</label>
+			<select id="user-name-select" name="user-id" autocomplete="off" required />
+				<option value="">--</option>
+				{% for user in users %}
+				<option value={{ user.id }}>{{ user.name }}</option>
+				{% endfor %}
+			</select>
 			</p>
 		</fieldset>
 		<p>
