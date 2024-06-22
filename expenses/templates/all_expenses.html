@@ -6,51 +6,51 @@ List of all expenses
 
 {% block content %}
 <div class="mycard">
-<table>
-	<thead>
-		<th>Item</th>
-		<th>Cost</th>
-		<th>Bought by</th>
-		<th>Date</th>
-		<th>Details</th>
-	</thead>
-	<tbody>
-	{% for x in expenses %}
-	<tr>
-		<td>{{ x.item }}</td>
-		<td>${{ x.cost|floatformat:"-2" }}</td>
-		<td>{{ x.user_name }}</td>
-		<td>{{ x.created_at|date:"F j" }}</td>
-		<td><a href="details/{{ x.id }}">Details</a></td>
-	</tr>
-	{% endfor %}
-	</tbody>
-</table>
+	<table>
+		<thead>
+			<th>Item</th>
+			<th>Cost</th>
+			<th>Bought by</th>
+			<th>Date</th>
+			<th>Details</th>
+		</thead>
+		<tbody>
+			{% for x in expenses %}
+			<tr>
+				<td>{{ x.item }}</td>
+				<td>${{ x.cost|floatformat:"-2" }}</td>
+				<td>{{ x.user_name }}</td>
+				<td>{{ x.created_at|date:"F j" }}</td>
+				<td><a href="details/{{ x.id }}">Details</a></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 </div>
 <div class="mycard">
 	<form method="post">{% csrf_token %}
 		<fieldset>
 			<legend>Enter expense</legend>
 			<p>
-			<label for="item">Item</label>
-			<input type="text" id="item" name="item" required />
+				<label for="item">Item</label>
+				<input type="text" id="item" name="item" required />
 			</p>
 			<p>
-			<label for="cost">Cost</label>
-			<input type="number" id="cost" name="cost" step="0.01" required />
+				<label for="cost">Cost</label>
+				<input type="number" id="cost" name="cost" step="0.01" required />
 			</p>
 			<p>
-			<label for="user-name-select">Who paid?</label>
-			<select id="user-name-select" name="user-id" autocomplete="off" required />
+				<label for="user-name-select">Who paid?</label>
+				<select id="user-name-select" name="user-id" autocomplete="off" required />
 				<option value="">--</option>
 				{% for user in users %}
 				<option value={{ user.id }}>{{ user.name }}</option>
 				{% endfor %}
-			</select>
+				</select>
 			</p>
 		</fieldset>
 		<p>
-		<button type="submit">Add Expense</button>
+			<button type="submit">Add Expense</button>
 		</p>
 	</form>
 </div>

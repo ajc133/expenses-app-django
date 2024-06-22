@@ -15,15 +15,15 @@
 			<th>Added On</th>
 		</thead>
 		<tbody>
-		<tr>
-		{% for expense in expenses %}
-		<tr>
-			<td>{{ expense.item }}</td>
-			<td>{{ expense.cost }}</td>
-			<td>{{ expense.created_at|date:"F j" }}</td>
-		</tr>
-		{% endfor %}
-		</tr>
+			<tr>
+				{% for expense in expenses %}
+			<tr>
+				<td>{{ expense.item }}</td>
+				<td>{{ expense.cost }}</td>
+				<td>{{ expense.created_at|date:"F j" }}</td>
+			</tr>
+			{% endfor %}
+			</tr>
 		</tbody>
 	</table>
 </div>
