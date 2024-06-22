@@ -8,7 +8,7 @@ Users
 <div class="mycard">
 	<ul>
 		{% for x in users %}
-		<a href="details/{{ x.id }}">
+		<a href="{% url 'user_details' x.id %}">
 			<li>{{ x.name }}</li>
 		</a>
 		{% endfor %}

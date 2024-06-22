@@ -21,7 +21,7 @@ List of all expenses
 				<td>${{ x.cost|floatformat:"-2" }}</td>
 				<td>{{ x.user_name }}</td>
 				<td>{{ x.created_at|date:"F j" }}</td>
-				<td><a href="details/{{ x.id }}">Details</a></td>
+				<td><a href="{% url 'expense_details' x.id %}">Details</a></td>
 			</tr>
 			{% endfor %}
 		</tbody>
