@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpRequest, HttpResponseNotFound
-from django.template import loader
+from django.template import loader, RequestContext, Template
 from django.views.decorators.http import require_http_methods, require_safe
 from .models import Expense, User
 
@@ -56,7 +56,9 @@ def user_details(request: HttpRequest, id):
 @require_safe
 def main(request: HttpRequest):
     template = loader.get_template("main.html")
-    return HttpResponse(template.render())
+    context = RequestContext(request)
+    print(f"User is authenticated: {request.user.is_authenticated}")
+    return HttpResponse(template.render(context.flatten()))
 
 
 def testing(request: HttpRequest):
