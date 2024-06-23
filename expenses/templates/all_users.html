@@ -9,7 +9,7 @@ Users
 	<ul>
 		{% for x in users %}
 		<a href="{% url 'user_details' x.id %}">
-			<li>{{ x.name }}</li>
+			<li>{{ x.first_name }}</li>
 		</a>
 		{% endfor %}
 	</ul>

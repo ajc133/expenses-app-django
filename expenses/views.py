@@ -1,51 +1,67 @@
-from django.http import HttpResponse, HttpRequest, HttpResponseNotFound
-from django.template import loader, RequestContext, Template
-from django.views.decorators.http import require_http_methods, require_safe
+from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest
+from django.template import loader, RequestContext
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import (
+    require_http_methods,
+    require_safe,
+)
+from django.contrib.auth.decorators import login_required
 from .models import Expense, User
 
 
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["HEAD", "GET", "POST"])
+@login_required
 def expenses(request: HttpRequest):
+    context = RequestContext(request)
     if request.method == "POST":
         form = request.POST
         item = form.get("item")
         cost = form.get("cost")
-        user_id = form.get("user-id")
-        if not Expense.create_expense(item, cost, user_id):
-            return HttpResponseNotFound(b"User does not exist")
+        payer_id = form.get("user-id")
+        if item is None or cost is None:
+            return HttpResponseBadRequest()
+        payer = get_object_or_404(User, pk=payer_id)
 
-    expenses = Expense.objects.all().values()
-    all_users = User.objects.all().values()
+        submitter = get_object_or_404(User, pk=request.user.id)
+        Expense(payer=payer, item=item, cost=cost, submitter=submitter).save()
 
-    # TODO: Figure out join query instead of this
+    expenses = Expense.objects.select_related("payer").all()
+    users = User.objects.exclude(username="admin").all()
+
     for expense in expenses:
-        user_name = User.objects.get(id=expense["user_id"])
-        expense["user_name"] = user_name
+        print(expense)
+    for user in users:
+        print(user)
 
     template = loader.get_template("all_expenses.html")
-    context = {"expenses": expenses, "users": all_users}
+    context = context.flatten() | {"expenses": expenses, "users": users}
     return HttpResponse(template.render(context, request))
 
 
 @require_safe
+@login_required
 def expense_details(request: HttpRequest, id):
+    # TODO: One db query
     expense = Expense.objects.get(id=id)
-    user_name = User.objects.get(id=expense.user.id)
+    user_name = User.objects.get(id=expense.payer.id)
     template = loader.get_template("expense_details.html")
     context = {"expense": expense, "user_name": user_name}
     return HttpResponse(template.render(context, request))
 
 
 @require_safe
+@login_required
 def users(request: HttpRequest):
-    users = User.objects.all().values()
+    users = User.objects.exclude(username="admin").all()
     template = loader.get_template("all_users.html")
-    context = {"users": users}
+    context = {"users": users.values()}
     return HttpResponse(template.render(context, request))
 
 
 @require_safe
+@login_required
 def user_details(request: HttpRequest, id):
+    # TODO: One db query
     user = User.objects.get(id=id)
     user_expenses = user.expense_set.all().values()
     template = loader.get_template("user_details.html")
@@ -54,16 +70,19 @@ def user_details(request: HttpRequest, id):
 
 
 @require_safe
+@login_required
 def main(request: HttpRequest):
+    # FIXME: Template doesn't show user logged in
     template = loader.get_template("main.html")
     context = RequestContext(request)
     print(f"User is authenticated: {request.user.is_authenticated}")
     return HttpResponse(template.render(context.flatten()))
 
 
+@require_safe
+@login_required
 def testing(request: HttpRequest):
     expenses = Expense.objects.all().values()
-    users = User.objects.all().values()
     template = loader.get_template("testing.html")
-    context = {"expenses": expenses, "users": users}
+    context = {"expenses": expenses}
     return HttpResponse(template.render(context, request))
