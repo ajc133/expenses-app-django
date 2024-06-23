@@ -14,7 +14,7 @@
 		<a href="{% url 'expenses' %}">EXPENSES</a> |
 		<a href="{% url 'users' %}">USERS</a> |
 		{% if user.is_authenticated %}
-		Welcome, {{ user.username }} |
+		Welcome, {{ user.first_name }} |
 		<form name="logout_form" action="{% url 'logout' %}" method="post">
 			{% csrf_token %}
 			<input type="hidden" name="perform_logout" value="1">

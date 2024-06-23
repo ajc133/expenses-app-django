@@ -1,13 +1,17 @@
 from django.contrib import admin
-from .models import Expense, User, Payment
+from .models import Expense, Payment
 
 
 class ExpenseAdmin(admin.ModelAdmin):
-    list_display = ("item", "user", "description", "cost", "created_at", "updated_at")
-
-
-class UserAdmin(admin.ModelAdmin):
-    list_display = ("name", "created_at", "updated_at")
+    list_display = (
+        "item",
+        "payer",
+        "description",
+        "cost",
+        "created_at",
+        "updated_at",
+        "submitter",
+    )
 
 
 class PaymentAdmin(admin.ModelAdmin):
@@ -15,5 +19,4 @@ class PaymentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Expense, ExpenseAdmin)
-admin.site.register(User, UserAdmin)
 admin.site.register(Payment, PaymentAdmin)

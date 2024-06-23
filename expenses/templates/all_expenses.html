@@ -19,7 +19,7 @@ List of all expenses
 			<tr>
 				<td>{{ x.item }}</td>
 				<td>${{ x.cost|floatformat:"-2" }}</td>
-				<td>{{ x.user_name }}</td>
+				<td>{{ x.payer.first_name }}</td>
 				<td>{{ x.created_at|date:"F j" }}</td>
 				<td><a href="{% url 'expense_details' x.id %}">Details</a></td>
 			</tr>
@@ -44,7 +44,7 @@ List of all expenses
 				<select id="user-name-select" name="user-id" autocomplete="off" required />
 				<option value="">--</option>
 				{% for user in users %}
-				<option value={{ user.id }}>{{ user.name }}</option>
+				<option value={{ user.id }}>{{ user.first_name }}</option>
 				{% endfor %}
 				</select>
 			</p>
