@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest
 from django.template import loader, RequestContext
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 from django.views.decorators.http import (
     require_http_methods,
     require_safe,
@@ -28,13 +29,22 @@ def expenses(request: HttpRequest):
     expenses = Expense.objects.select_related("payer").all()
     users = User.objects.exclude(username="admin").all()
 
-    for expense in expenses:
-        print(expense)
+    total_cost = Expense.objects.aggregate(Sum("cost"))["cost__sum"]
+    print(total_cost)
+    # TODO: DB query
     for user in users:
-        print(user)
+        setattr(
+            user,
+            "owes",
+            (total_cost / 2) - sum([e.cost for e in user.expense_set.all()]),
+        )
 
     template = loader.get_template("all_expenses.html")
-    context = context.flatten() | {"expenses": expenses, "users": users}
+    context = context.flatten() | {
+        "expenses": expenses,
+        "users": users,
+    }
+
     return HttpResponse(template.render(context, request))
 
 
