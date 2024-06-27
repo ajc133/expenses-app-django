@@ -16,7 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = os.environ.get("ENV", "dev")
+ENVIRONMENT = os.environ.get("ENVIRONMENT", "dev")
 
 LOGIN_URL = "login"
 
@@ -29,21 +29,20 @@ LOGOUT_REDIRECT_URL = "main"
 if ENVIRONMENT == "prod":
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
     DEBUG = False
+    ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOST", "")]
+    CSRF_TRUSTED_ORIGINS = ["https://" + os.environ.get("ALLOWED_HOST", "")]
+    SECURE_PROXY_SSL_HEADER = ("X-Forwarded-Proto", "https")
 else:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
-    SECURE_SSL_REDIRECT = False
     DEBUG = True
+    ALLOWED_HOSTS = ["*"]
 
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 with open(os.environ.get("SECRET_KEY_FILE", "secret_key.txt")) as f:
     SECRET_KEY = f.read().strip()
-
-
-ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -96,7 +95,7 @@ WSGI_APPLICATION = "splitwyze.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / "data/db.sqlite3",
     }
 }
 
