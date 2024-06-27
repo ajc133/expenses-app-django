@@ -14,6 +14,7 @@ from .models import Expense, User
 @login_required
 def expenses(request: HttpRequest):
     context = RequestContext(request)
+    submitter = get_object_or_404(User, pk=request.user.id)
     if request.method == "POST":
         form = request.POST
         item = form.get("item")
@@ -23,11 +24,11 @@ def expenses(request: HttpRequest):
             return HttpResponseBadRequest()
         payer = get_object_or_404(User, pk=payer_id)
 
-        submitter = get_object_or_404(User, pk=request.user.id)
         Expense(payer=payer, item=item, cost=cost, submitter=submitter).save()
 
     expenses = Expense.objects.select_related("payer").all()
-    users = User.objects.exclude(username="admin").all()
+    users = list(User.objects.exclude(username="admin").exclude(pk=submitter.id).all())
+    users.insert(0, submitter)
 
     total_cost = Expense.objects.aggregate(Sum("cost"))["cost__sum"]
     print(total_cost)

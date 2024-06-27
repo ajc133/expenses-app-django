@@ -51,7 +51,6 @@ List of all expenses
 			<p>
 				<label for="user-name-select">Who paid?</label>
 				<select id="user-name-select" name="user-id" autocomplete="off" required />
-				<option value="">--</option>
 				{% for user in users %}
 				<option value={{ user.id }}>{{ user.first_name }}</option>
 				{% endfor %}
