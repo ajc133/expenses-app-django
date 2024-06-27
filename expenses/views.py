@@ -53,9 +53,10 @@ def expenses(request: HttpRequest):
 def expense_details(request: HttpRequest, id):
     # TODO: One db query
     expense = Expense.objects.get(id=id)
-    user_name = User.objects.get(id=expense.payer.id)
+    payer = User.objects.get(id=expense.payer.id)
+    submitter_name = User.objects.get(id=expense.submitter.id)
     template = loader.get_template("expense_details.html")
-    context = {"expense": expense, "user_name": user_name}
+    context = {"expense": expense, "payer": payer, "submitter": submitter_name}
     return HttpResponse(template.render(context, request))
 
 
@@ -85,7 +86,6 @@ def main(request: HttpRequest):
     # FIXME: Template doesn't show user logged in
     template = loader.get_template("main.html")
     context = RequestContext(request)
-    print(f"User is authenticated: {request.user.is_authenticated}")
     return HttpResponse(template.render(context.flatten()))
 
 

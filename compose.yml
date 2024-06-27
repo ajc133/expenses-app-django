@@ -1,0 +1,12 @@
+services:
+  web:
+    container_name: splitwyze
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - "$PWD/secret_key.txt:/app/secret_key.txt"
+      - "$PWD/db.sqlite3:/app/db.sqlite3"
+
+
+

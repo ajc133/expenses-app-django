@@ -8,7 +8,8 @@ Details about {{ expense.item }}
 <div class="mycard">
 	<h1>{{ expense.item }}</h1>
 	<p>Description: {{ expense.description | default:"--" }}</p>
-	<p>Bought by: {{ user_name }}</p>
+	<p>Bought by: {{ payer.first_name }}</p>
+	<p>Submitted by: {{ submitter.first_name }}</p>
 	<p>Created: {{ expense.created_at }} UTC</p>
 	<p>Updated: {{ expense.updated_at }} UTC</p>
 </div>

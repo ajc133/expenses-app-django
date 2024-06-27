@@ -1,0 +1,8 @@
+*$py.class
+**/__pycache__/
+*.py[cod]
+
+*.sqlite3
+.git/
+.mypy_cache
+secret_key.txt
