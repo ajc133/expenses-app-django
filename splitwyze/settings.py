@@ -39,7 +39,7 @@ else:
 
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-with open("secret_key.txt") as f:
+with open(os.environ.get("SECRET_KEY_FILE", "secret_key.txt")) as f:
     SECRET_KEY = f.read().strip()
 
 
