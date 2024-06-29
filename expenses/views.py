@@ -19,19 +19,27 @@ def expenses(request: HttpRequest):
         form = request.POST
         item = form.get("item")
         cost = form.get("cost")
+        description = form.get("description")
         payer_id = form.get("user-id")
         if item is None or cost is None:
             return HttpResponseBadRequest()
         payer = get_object_or_404(User, pk=payer_id)
 
-        Expense(payer=payer, item=item, cost=cost, submitter=submitter).save()
+        Expense(
+            payer=payer,
+            item=item,
+            cost=cost,
+            description=description,
+            submitter=submitter,
+        ).save()
 
     expenses = Expense.objects.select_related("payer").all()
+
     users = list(User.objects.exclude(username="admin").exclude(pk=submitter.id).all())
+    # We always want submitter to be the first dropdown option
     users.insert(0, submitter)
 
     total_cost = Expense.objects.aggregate(Sum("cost"))["cost__sum"]
-    print(total_cost)
     # TODO: DB query
     for user in users:
         setattr(

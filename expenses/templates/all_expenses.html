@@ -6,6 +6,45 @@ List of all expenses
 
 {% block content %}
 <div class="mycard">
+	<form method="post">{% csrf_token %}
+		<fieldset>
+			<legend>Enter expense</legend>
+			<p>
+				<label for="item">Item</label>
+				<input type="text" id="item" name="item" required />
+			</p>
+			<p>
+				<label for="cost">Cost</label>
+				<input type="number" id="cost" name="cost" step="0.01" required />
+			</p>
+			<p>
+				<label for="description">Description</label>
+				<input type="text" id="description" name="description" />
+			</p>
+			<p>
+				<label for="user-name-select">Who paid?</label>
+				<select id="user-name-select" name="user-id" autocomplete="off" required />
+				{% for user in users %}
+				<option value={{ user.id }}>{{ user.first_name }}</option>
+				{% endfor %}
+				</select>
+			</p>
+			<p>
+				<button type="submit">Add Expense</button>
+			</p>
+		</fieldset>
+	</form>
+</div>
+<div class="mycard">
+	<div>
+		<ul>
+			{% for u in users %}
+			{% if u.owes > 0 %}
+			<li>{{ u.first_name }} owes ${{ u.owes }}</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
 	<table>
 		<thead>
 			<th>Item</th>
@@ -26,40 +65,5 @@ List of all expenses
 			{% endfor %}
 		</tbody>
 	</table>
-	<div>
-		<ul>
-			{% for u in users %}
-			{% if u.owes > 0 %}
-			<li>{{ u.first_name }} owes ${{ u.owes }}</li>
-			{% endif %}
-			{% endfor %}
-		</ul>
-	</div>
-</div>
-<div class="mycard">
-	<form method="post">{% csrf_token %}
-		<fieldset>
-			<legend>Enter expense</legend>
-			<p>
-				<label for="item">Item</label>
-				<input type="text" id="item" name="item" required />
-			</p>
-			<p>
-				<label for="cost">Cost</label>
-				<input type="number" id="cost" name="cost" step="0.01" required />
-			</p>
-			<p>
-				<label for="user-name-select">Who paid?</label>
-				<select id="user-name-select" name="user-id" autocomplete="off" required />
-				{% for user in users %}
-				<option value={{ user.id }}>{{ user.first_name }}</option>
-				{% endfor %}
-				</select>
-			</p>
-		</fieldset>
-		<p>
-			<button type="submit">Add Expense</button>
-		</p>
-	</form>
 </div>
 {% endblock %}
