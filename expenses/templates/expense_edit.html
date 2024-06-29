@@ -1,0 +1,42 @@
+{% extends "master.html" %}
+
+{% block title %}
+Edit expense
+{% endblock %}
+
+{% block content %}
+<div class="mycard">
+	<h1>{{ expense.item }}</h1>
+	<form method="post" action="{% url 'expense_edit' expense.id %}">
+		{% csrf_token %}
+		<fieldset>
+			<legend>Edit expense</legend>
+			<p>
+				<label for="item">Item</label>
+				<input type="text" id="item" name="item" value={{ expense.item }} required />
+			</p>
+			<p>
+				<label for="cost">Cost</label>
+				{# FIXME: display 2 decimal places if they exist #}
+				<input type="number" id="cost" name="cost" step="0.01" value="{{ expense.cost }}" required />
+			</p>
+			<p>
+				<label for="description">Description</label>
+				<input type="text" id="description" name="description" value="{{ expense.description }}" />
+			</p>
+			<p>
+				{# FIXME: set default value to what it was already #}
+				<label for="user-name-select">Who paid?</label>
+				<select id="user-name-select" name="user-id" autocomplete="off" required />
+				{% for user in users %}
+				<option value={{ user.id }}>{{ user.first_name }}</option>
+				{% endfor %}
+				</select>
+			</p>
+			<p>
+				<button type="submit">Update Expense</button>
+			</p>
+		</fieldset>
+	</form>
+</div>
+{% endblock %}

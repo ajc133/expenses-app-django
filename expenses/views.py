@@ -33,7 +33,7 @@ def expenses(request: HttpRequest):
             submitter=submitter,
         ).save()
 
-    expenses = Expense.objects.select_related("payer").all()
+    expenses = Expense.objects.select_related("payer").order_by("-created_at").all()
 
     users = list(User.objects.exclude(username="admin").exclude(pk=submitter.id).all())
     # We always want submitter to be the first dropdown option
@@ -65,6 +65,18 @@ def expense_details(request: HttpRequest, id):
     payer = User.objects.get(id=expense.payer.id)
     submitter_name = User.objects.get(id=expense.submitter.id)
     template = loader.get_template("expense_details.html")
+    context = {"expense": expense, "payer": payer, "submitter": submitter_name}
+    return HttpResponse(template.render(context, request))
+
+
+@require_http_methods(["HEAD", "GET", "POST"])
+@login_required
+def expense_edit(request: HttpRequest, id):
+    # TODO: One db query
+    expense = Expense.objects.get(id=id)
+    payer = User.objects.get(id=expense.payer.id)
+    submitter_name = User.objects.get(id=expense.submitter.id)
+    template = loader.get_template("expense_edit.html")
     context = {"expense": expense, "payer": payer, "submitter": submitter_name}
     return HttpResponse(template.render(context, request))
 
