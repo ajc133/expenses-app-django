@@ -38,7 +38,7 @@ List of all expenses
 <div>
 	<ul>
 		{% for u in users %}
-		{% if u.owes > 0 %} <li>{{ u.first_name }} owes ${{ u.owes }}</li> {% endif %}
+		{% if u.owes > 0 %} <li>{{ u.first_name }} owes ${{ u.owes|floatformat:"-2" }}</li> {% endif %}
 		{# Editor thinks 'less than' sign is a tag start. Hence weird line 45 tab #}
 		{% if u.owes < 0 %} <li>{{ u.first_name }} is owed ${% widthratio -1 1 u.owes %}</li> {% endif %}
 			{% endfor %}

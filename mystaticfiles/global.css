@@ -57,3 +57,20 @@ p {
   margin: 5px 0 5px 0
 }
 
+tbody tr:nth-child(2n) {
+  background-color: #375bdc;
+  color: #fff;
+}
+
+/* TODO: figure out how to combine :) */
+tbody tr:nth-child(2n) > td > a:link {
+  color: #fff;
+}
+tbody tr:nth-child(2n) > td > a:visited {
+  color: #fff;
+}
+
+table {
+  border-spacing: 0;
+}
+
