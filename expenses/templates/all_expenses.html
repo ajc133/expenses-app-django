@@ -49,11 +49,10 @@ List of all expenses
 		<tbody>
 			{% for x in expenses %}
 			<tr>
-				<td>{{ x.item }}</td>
-				<td>${{ x.cost|floatformat:"-2" }}</td>
-				<td>{{ x.payer.first_name }}</td>
-				<td>{{ x.created_at|date:"F j" }}</td>
-				<td><a href="{% url 'expense_details' x.id %}">Details</a></td>
+				<td class="created-cell">{{ x.created_at|date:"M" }}<br>{{ x.created_at|date:"j" }}</td>
+				<td class="item-cell"><a href="{% url 'expense_details' x.id %}">{{ x.item }}</a></td>
+				<td class="payer-cell">{{ x.payer.first_name }}</td>
+				<td class="cost-cell">${{ x.cost|floatformat:"-2" }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>

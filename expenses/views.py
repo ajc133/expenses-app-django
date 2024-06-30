@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest
 from django.template import loader, RequestContext
 from django.shortcuts import get_object_or_404
@@ -89,6 +91,7 @@ def expense_edit(request: HttpRequest, id):
             description=description,
             payer=payer_id,
             submitter=submitter,
+            updated_at=datetime.now(tz=timezone.utc),
         )
     # TODO: One db query
     expense = Expense.objects.get(id=id)

@@ -72,5 +72,19 @@ tbody tr:nth-child(2n) > td > a:visited {
 
 table {
   border-spacing: 0;
+  width: 100%;
 }
 
+
+.created-cell {
+  text-align: center;
+  font-size: 12px;
+}
+
+.item-cell {
+  text-align: center;
+}
+
+.cost-cell {
+  text-align: right;
+}

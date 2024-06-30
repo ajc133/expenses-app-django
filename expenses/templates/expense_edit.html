@@ -7,6 +7,7 @@ Edit expense
 {% block content %}
 <div class="mycard">
 	<h1>{{ expense.item }}</h1>
+	<p><a href={% url 'expense_details' expense.id %}>View</a></p>
 	<form method="post" action="{% url 'expense_edit' expense.id %}">
 		{% csrf_token %}
 		<fieldset>
