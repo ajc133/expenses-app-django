@@ -72,12 +72,34 @@ def expense_details(request: HttpRequest, id):
 @require_http_methods(["HEAD", "GET", "POST"])
 @login_required
 def expense_edit(request: HttpRequest, id):
+    submitter = get_object_or_404(User, pk=request.user.id)
+    if request.method == "POST":
+        form = request.POST
+        item = form.get("item")
+        cost = form.get("cost")
+        description = form.get("description")
+        payer_id = form.get("user-id")
+        if item is None or cost is None:
+            return HttpResponseBadRequest()
+        payer = get_object_or_404(User, pk=payer_id)
+
+        Expense.objects.filter(id=id).update(
+            item=item,
+            cost=cost,
+            description=description,
+            payer=payer_id,
+            submitter=submitter,
+        )
     # TODO: One db query
     expense = Expense.objects.get(id=id)
     payer = User.objects.get(id=expense.payer.id)
-    submitter_name = User.objects.get(id=expense.submitter.id)
+
+    users = list(User.objects.exclude(username="admin").exclude(id=payer.id).all())
+    # We always want submitter to be the first dropdown option
+    users.insert(0, payer)
+
     template = loader.get_template("expense_edit.html")
-    context = {"expense": expense, "payer": payer, "submitter": submitter_name}
+    context = {"expense": expense, "users": users}
     return HttpResponse(template.render(context, request))
 
 
