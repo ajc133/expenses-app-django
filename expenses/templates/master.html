@@ -6,14 +6,13 @@
 	<title>{% block title %}{% endblock %}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
-	<!-- <link rel="stylesheet" href={% static "global.css" %} /> -->
+	<link rel="stylesheet" href={% static "global.css" %} />
 	<link rel="shortcut icon" href={% static "favicon.ico" %} />
 </head>
 
 <body>
 	<div class="topnav">
-		<a href="{% url 'main' %}">HOME</a> |
+		<h1>Splootwyze</h1>
 		<a href="{% url 'expenses' %}">EXPENSES</a> |
 		<a href="{% url 'users' %}">USERS</a> |
 		{% if user.is_authenticated %}
@@ -23,9 +22,9 @@
 			<input type="hidden" name="perform_logout" value="1">
 			<input type="submit" value="Logout" id="perform_logout_button">
 			<a href="#" style="display:none;" id="logout_link">Logout</a>
-		</form> |
+		</form>
 		{% else %}
-		<a href="{% url 'login' %}">LOGIN</a> |
+		<a href="{% url 'login' %}">LOGIN</a>
 		{% endif %}
 	</div>
 

@@ -35,24 +35,17 @@ List of all expenses
 		</fieldset>
 	</form>
 </div>
-<div class="mycard">
-	<div>
-		<ul>
-			{% for u in users %}
-			{% if u.owes > 0 %}
-			<li>{{ u.first_name }} owes ${{ u.owes }}</li>
-			{% endif %}
+<div>
+	<ul>
+		{% for u in users %}
+		{% if u.owes > 0 %} <li>{{ u.first_name }} owes ${{ u.owes }}</li> {% endif %}
+		{# Editor thinks 'less than' sign is a tag start. Hence weird line 45 tab #}
+		{% if u.owes < 0 %} <li>{{ u.first_name }} is owed ${% widthratio -1 1 u.owes %}</li> {% endif %}
 			{% endfor %}
-		</ul>
-	</div>
+	</ul>
+</div>
+<div class="mycard">
 	<table>
-		<thead>
-			<th>Item</th>
-			<th>Cost</th>
-			<th>Bought by</th>
-			<th>Date</th>
-			<th>Details</th>
-		</thead>
 		<tbody>
 			{% for x in expenses %}
 			<tr>
