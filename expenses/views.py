@@ -1,9 +1,15 @@
 from datetime import datetime, timezone
 
-from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest
+from django.http import (
+    HttpResponse,
+    HttpRequest,
+    HttpResponseBadRequest,
+    HttpResponseRedirect,
+)
 from django.template import loader, RequestContext
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
+from django.urls import reverse
 from django.views.decorators.http import (
     require_http_methods,
     require_safe,
@@ -34,6 +40,7 @@ def expenses(request: HttpRequest):
             description=description,
             submitter=submitter,
         ).save()
+        return HttpResponseRedirect(reverse("expenses"))
 
     expenses = Expense.objects.select_related("payer").order_by("-created_at").all()
 
