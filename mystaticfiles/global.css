@@ -10,7 +10,7 @@ body {
   color:#ffffff;
   padding:10px;
 }
-.topnav > h1:nth-child(1) {
+h1 {
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -87,4 +87,9 @@ table {
 
 .cost-cell {
   text-align: right;
+}
+
+
+html, body {
+    height: 100%;
 }

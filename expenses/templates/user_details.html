@@ -1,4 +1,4 @@
-{% extends "master.html" %}
+{% extends "main.html" %}
 
 {% block title %}
 {{ user.name }}
@@ -6,25 +6,7 @@
 
 {% block content %}
 <div class="mycard">
-	<h1>{{ user.name }}</h1>
-	<h2>Expenses</h2>
-	<table>
-		<thead>
-			<th>Item</th>
-			<th>Cost</th>
-			<th>Added On</th>
-		</thead>
-		<tbody>
-			<tr>
-				{% for expense in expenses %}
-			<tr>
-				<td>{{ expense.item }}</td>
-				<td>{{ expense.cost }}</td>
-				<td>{{ expense.created_at|date:"F j" }}</td>
-			</tr>
-			{% endfor %}
-			</tr>
-		</tbody>
-	</table>
+	<h2>{{ user.first_name }}'s Expenses</h2>
+	{% include 'expense_table.html' %}
 </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends "master.html" %}
+{% extends "main.html" %}
 
 {% block title %}
 List of all expenses
@@ -45,17 +45,6 @@ List of all expenses
 	</ul>
 </div>
 <div class="mycard">
-	<table>
-		<tbody>
-			{% for x in expenses %}
-			<tr>
-				<td class="created-cell">{{ x.created_at|date:"M" }}<br>{{ x.created_at|date:"j" }}</td>
-				<td class="item-cell"><a href="{% url 'expense_details' x.id %}">{{ x.item }}</a></td>
-				<td class="payer-cell">{{ x.payer.first_name }}</td>
-				<td class="cost-cell">${{ x.cost|floatformat:"-2" }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	{% include 'expense_table.html' %}
 </div>
 {% endblock %}

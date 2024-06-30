@@ -128,15 +128,6 @@ def user_details(request: HttpRequest, id):
 
 @require_safe
 @login_required
-def main(request: HttpRequest):
-    # FIXME: Template doesn't show user logged in
-    template = loader.get_template("main.html")
-    context = RequestContext(request)
-    return HttpResponse(template.render(context.flatten()))
-
-
-@require_safe
-@login_required
 def testing(request: HttpRequest):
     expenses = Expense.objects.all().values()
     template = loader.get_template("testing.html")
