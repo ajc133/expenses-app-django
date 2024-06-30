@@ -1,21 +1,24 @@
 {% if expense %}
-{% endif %}
 <form method="post" action="{% url 'expense_edit' expense.id %}">
+{% else %}
+<form method="post" action="{% url 'expenses' %}">
+{% endif %}
 	{% csrf_token %}
 	<fieldset>
 		<legend>Edit expense</legend>
 		<p>
 			<label for="item">Item</label>
-			<input type="text" id="item" name="item" value="{{ expense.item }}" required />
+			<input type="text" id="item" name="item" {% if expense %} value="{{ expense.item }}" {% endif %} required />
 		</p>
 		<p>
 			<label for="cost">Cost</label>
 			{# TODO: display 2 decimal places if they exist #}
-			<input type="number" id="cost" name="cost" step="0.01" value="{{ expense.cost }}" required />
+			{# FIXME: NVIM keeps messing up the template here #}
+			<input type="number" id="cost" name="cost" step="0.01" {% if expense %} value="{{ expense.cost }}" {% endif %} required />
 		</p>
 		<p>
 			<label for="description">Description</label>
-			<input type="text" id="description" name="description" value="{{ expense.description }}" />
+			<input type="text" id="description" name="description" {% if expense %} value="{{ expense.description }}" {% endif %} />
 		</p>
 		<p>
 			<label for="user-name-select">Who paid?</label>

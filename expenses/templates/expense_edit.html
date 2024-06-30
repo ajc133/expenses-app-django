@@ -8,5 +8,6 @@ Edit expense
 <div class="mycard">
 	<h1>{{ expense.item }}</h1>
 	<p><a href={% url 'expense_details' expense.id %}>View</a></p>
+	{% include 'expense_form_with_id.html' with expense=expense %}
 </div>
 {% endblock %}
