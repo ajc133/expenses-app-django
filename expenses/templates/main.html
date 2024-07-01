@@ -12,20 +12,24 @@
 
 <body>
 	<div class="topnav">
-		<h1><a href="{% url 'expenses' %}">Splootwyze</a></h1>
-		<a href="{% url 'expenses' %}">EXPENSES</a> |
-		<a href="{% url 'users' %}">USERS</a> |
-		{% if user.is_authenticated %}
-		Welcome, {{ user.first_name }} |
-		<form name="logout_form" action="{% url 'logout' %}" method="post">
-			{% csrf_token %}
-			<input type="hidden" name="perform_logout" value="1">
-			<input type="submit" value="Logout" id="perform_logout_button">
-			<a href="#" style="display:none;" id="logout_link">Logout</a>
-		</form>
-		{% else %}
-		<a href="{% url 'login' %}">LOGIN</a>
-		{% endif %}
+		<div>
+			<h1><a href="{% url 'expenses' %}">Splootwyze</a></h1>
+		</div>
+		<div>
+			<p><a href="{% url 'expenses' %}">Expenses</a></p> |
+			<p><a href="{% url 'users' %}">Users</a></p> |
+
+			{% if user.is_authenticated %}
+			<p>Welcome, {{ user.first_name }}</p> |
+			<form name="logout_form" action="{% url 'logout' %}" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="perform_logout" value="1">
+				<input type="submit" value="Logout" id="perform_logout_button">
+			</form>
+			{% else %}
+			<a href="{% url 'login' %}">LOGIN</a>
+			{% endif %}
+		</div>
 	</div>
 
 
