@@ -5,7 +5,7 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="expenses"), name="main"),
     path("users/", views.users, name="users"),
-    path("users/details/<int:expense_id>", views.user_details, name="user_details"),
+    path("users/details/<int:user_id>", views.user_details, name="user_details"),
     path("expenses/", views.expenses, name="expenses"),
     path(
         "expenses/<int:expense_id>/details",
