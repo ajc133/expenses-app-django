@@ -87,6 +87,7 @@ table {
 
 .cost-cell {
   text-align: right;
+  padding-right: 0.5em;
 }
 
 
