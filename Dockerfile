@@ -6,28 +6,21 @@ ENV PYTHONUNBUFFERED=1
 # Don't create `.pyc` files:
 ENV PYTHONDONTWRITEBYTECODE=1
 
-ADD pyproject.toml poetry.lock /app/
-
-RUN pip install poetry
-RUN poetry config virtualenvs.in-project true
-
-WORKDIR /app
-COPY . .
-
-RUN poetry install --only main
-
-
-#########################
-
-FROM python:3.12-alpine
-
 WORKDIR /app
 
-COPY --from=builder /app /app
+COPY manage.py manage.py
 
-# # For options, see https://boxmatrix.info/wiki/Property:adduser
-# RUN adduser app -DHh ${WORKDIR} -u 1000
-# USER 1000
-#
+COPY requirements.txt requirements.txt
+
+RUN pip install -r requirements.txt
+
+COPY ./splitwyze ./splitwyze
+COPY ./expenses ./expenses
+COPY ./mystaticfiles/ ./mystaticfiles/
+
+# Set dummy value for collectstatic, no need for secret key here
+RUN SECRET_KEY_FILE=manage.py python manage.py collectstatic --no-input
+
 EXPOSE 8000/tcp
+COPY ./docker-entrypoint.sh /app/docker-entrypoint.sh
 CMD "/app/docker-entrypoint.sh"

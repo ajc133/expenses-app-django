@@ -2,7 +2,15 @@
 **/__pycache__/
 *.py[cod]
 
+/data
 *.sqlite3
 .git/
+.gitignore
 .mypy_cache
+
+Dockerfile
+compose.yml
+poetry.lock
+productionfiles/
+pyproject.toml
 secret_key.txt
