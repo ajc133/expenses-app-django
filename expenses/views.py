@@ -134,9 +134,8 @@ def users(request: HttpRequest):
 @require_safe
 @login_required
 def user_details(request: HttpRequest, user_id):
-    # TODO: One db query
     user = User.objects.get(id=user_id)
-    user_expenses = user.expense_set.all().values()
+    user_expenses = user.expense_set.order_by("-created_at").all()
     template = loader.get_template("user_details.html")
     context = {"user": user, "expenses": user_expenses}
     return HttpResponse(template.render(context, request))
