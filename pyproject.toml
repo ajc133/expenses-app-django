@@ -22,7 +22,7 @@ pre-commit = "^3.7.1"
 plugins = ["mypy_django_plugin.main"]
 
 [tool.django-stubs]
-django_settings_module = "splitwyze.settings"
+django_settings_module = "splootwyze.settings"
 
 [build-system]
 requires = ["poetry-core"]

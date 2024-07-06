@@ -8,13 +8,12 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 WORKDIR /app
 
-COPY manage.py manage.py
-
 COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY ./splitwyze ./splitwyze
+COPY manage.py manage.py
+COPY ./splootwyze ./splootwyze
 COPY ./expenses ./expenses
 COPY ./mystaticfiles/ ./mystaticfiles/
 
@@ -23,4 +22,4 @@ RUN SECRET_KEY_FILE=manage.py python manage.py collectstatic --no-input
 
 EXPOSE 8000/tcp
 COPY ./docker-entrypoint.sh /app/docker-entrypoint.sh
-CMD "/app/docker-entrypoint.sh"
+CMD ["/app/docker-entrypoint.sh"]
