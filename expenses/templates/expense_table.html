@@ -3,7 +3,7 @@
 		{% for x in expenses %}
 		<tr>
 			<td class="created-cell">{{ x.created_at|date:"M" }}<br>{{ x.created_at|date:"j" }}</td>
-			<td class="item-cell"><a href="{% url 'expense_details' x.id %}">{{ x.item }}</a></td>
+			<td class="item-cell"><a href="{% url 'expense_details' x.id %}">{{ x.item|truncatechars:20 }}</a></td>
 			<td class="payer-cell">{{ x.payer.first_name }}</td>
 			<td class="cost-cell">${{ x.cost|floatformat:"-2" }}</td>
 		</tr>
