@@ -7,6 +7,11 @@ Edit expense
 {% block content %}
 <div class="mycard">
 	<h1>{{ expense.item }}</h1>
+	<form action="{% url 'expense_delete' expense.id %}" method="post">
+		{% csrf_token %}
+		<input hidden name="expense-id" value="{{ expense.id }}">
+		<p><button type="submit">Delete</button></p>
+	</form>
 	<p><a href={% url 'expense_details' expense.id %}>View</a></p>
 	{% include 'expense_form_with_id.html' with expense=expense %}
 </div>

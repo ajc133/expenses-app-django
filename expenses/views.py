@@ -122,6 +122,13 @@ def expense_edit(request: HttpRequest, expense_id):
     return HttpResponse(template.render(context, request))
 
 
+@require_http_methods(["POST"])
+@login_required
+def expense_delete(request: HttpRequest, expense_id):
+    Expense.objects.get(pk=expense_id).delete()
+    return HttpResponseRedirect(reverse("expenses"))
+
+
 @require_safe
 @login_required
 def users(request: HttpRequest):

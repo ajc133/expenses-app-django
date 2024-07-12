@@ -13,4 +13,7 @@ urlpatterns = [
         name="expense_details",
     ),
     path("expenses/<int:expense_id>/edit", views.expense_edit, name="expense_edit"),
+    path(
+        "expenses/<int:expense_id>/delete", views.expense_delete, name="expense_delete"
+    ),
 ]
