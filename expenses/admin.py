@@ -6,7 +6,6 @@ class ExpenseAdmin(admin.ModelAdmin):
     list_display = (
         "item",
         "payer",
-        "description",
         "cost",
         "created_at",
         "updated_at",

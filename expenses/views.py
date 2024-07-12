@@ -28,7 +28,6 @@ def expenses(request: HttpRequest):
         form = request.POST
         item = form.get("item")
         cost = form.get("cost")
-        description = form.get("description")
         payer_id = form.get("user-id")
         if item is None or cost is None:
             return HttpResponseBadRequest()
@@ -38,7 +37,6 @@ def expenses(request: HttpRequest):
             payer=payer,
             item=item,
             cost=cost,
-            description=description,
             submitter=submitter,
         ).save()
         return HttpResponseRedirect(reverse("expenses"))
@@ -82,7 +80,6 @@ def update_expense(
     submitter = get_object_or_404(User, pk=request.user.id)
     item = form.get("item")
     cost = form.get("cost")
-    description = form.get("description")
     payer_id = form.get("user-id")
     if item is None or cost is None:
         return HttpResponseBadRequest()
@@ -90,7 +87,6 @@ def update_expense(
     Expense.objects.filter(id=expense_id).update(
         item=item,
         cost=cost,
-        description=description,
         payer=payer_id,
         submitter=submitter,
         updated_at=datetime.now(tz=timezone.utc),

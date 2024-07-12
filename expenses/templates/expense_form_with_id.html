@@ -13,10 +13,6 @@
 			<input type="number" id="cost" name="cost" step="0.01" value="{{ expense.cost|default:'' }}" required />
 		</p>
 		<p>
-			<label for="description">Description</label>
-			<input type="text" id="description" name="description" value="{{ expense.description|default:'' }}" />
-		</p>
-		<p>
 			<label for="user-name-select">Who paid?</label>
 			<select id="user-name-select" name="user-id" autocomplete="off" required />
 			{% for user in users %}

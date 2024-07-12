@@ -9,7 +9,6 @@ Details about {{ expense.item }}
 	<h1>{{ expense.item }}</h1>
 	<p><a href={% url 'expense_edit' expense.id %}>Edit</a></p>
 	<p>Cost: ${{ expense.cost }}</p>
-	<p>Description: {{ expense.description | default:"--" }}</p>
 	<p>Bought by: {{ payer.first_name }}</p>
 	<p>Submitted by: {{ submitter.first_name }}</p>
 	<p>Created: {{ expense.created_at }} UTC</p>

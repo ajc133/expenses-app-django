@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 class Expense(models.Model):
     payer = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.CharField(max_length=255)
-    description = models.CharField(max_length=255, null=True, blank=True)
     cost = models.FloatField()
     submitter = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="expense_submitter", null=False
