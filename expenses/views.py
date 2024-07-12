@@ -50,19 +50,16 @@ def expenses(request: HttpRequest):
     users.insert(0, submitter)
 
     total_cost = Expense.objects.aggregate(Sum("cost"))["cost__sum"]
-    # TODO: DB query
+    num_users = len(users)
+    debts = []
     for user in users:
-        setattr(
-            user,
-            "owes",
-            (total_cost / 2) - sum([e.cost for e in user.expense_set.all()]),
-        )
+        amount_spent = sum([e.cost for e in user.expense_set.all()])
+        if amount_spent < total_cost / num_users:
+            owes = total_cost / num_users - amount_spent
+            debts.append((user.first_name, owes))
 
     template = loader.get_template("all_expenses.html")
-    context = context.flatten() | {
-        "expenses": expenses,
-        "users": users,
-    }
+    context = context.flatten() | {"expenses": expenses, "users": users, "debts": debts}
 
     return HttpResponse(template.render(context, request))
 
