@@ -47,7 +47,7 @@ def expenses(request: HttpRequest):
     # We always want submitter to be the first dropdown option
     users.insert(0, submitter)
 
-    total_cost = Expense.objects.aggregate(Sum("cost"))["cost__sum"]
+    total_cost = Expense.objects.aggregate(Sum("cost"))["cost__sum"] or 0
     num_users = len(users)
     debts = []
     for user in users:
