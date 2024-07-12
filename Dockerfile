@@ -1,4 +1,3 @@
-# https://github.com/python-poetry/poetry/issues/1178#issuecomment-998549092
 FROM python:3.12 AS builder
 
 # Don't buffer `stdout`:

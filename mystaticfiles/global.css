@@ -6,7 +6,7 @@ body {
   color: #585d74;
 }
 .topnav {
-  background-color:#375BDC;
+  background-color:#8A9BD5;
   color:#ffffff;
   padding:10px;
   display: flex;
@@ -64,7 +64,7 @@ p {
 }
 
 tbody tr:nth-child(2n) {
-  background-color: #375bdc;
+  background-color: #8A9BD5;
   color: #fff;
 }
 

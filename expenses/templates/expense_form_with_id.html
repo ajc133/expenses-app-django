@@ -2,7 +2,7 @@
 	action="{% url 'expenses' %}" {% endif %}>
 	{% csrf_token %}
 	<fieldset>
-		<legend>Edit expense</legend>
+		<legend>Expense Details</legend>
 		<p>
 			<label for="item">Item</label>
 			<input type="text" id="item" name="item" value="{{ expense.item|default:'' }}" required />
@@ -25,7 +25,7 @@
 			</select>
 		</p>
 		<p>
-			<button type="submit">Update Expense</button>
+			<button type="submit">Submit</button>
 		</p>
 	</fieldset>
 </form>
