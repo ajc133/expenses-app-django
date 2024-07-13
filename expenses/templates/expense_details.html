@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% load tz %}
 
 {% block title %}
 Details about {{ expense.item }}
@@ -11,7 +12,7 @@ Details about {{ expense.item }}
 	<p>Cost: ${{ expense.cost }}</p>
 	<p>Bought by: {{ payer.first_name }}</p>
 	<p>Submitted by: {{ submitter.first_name }}</p>
-	<p>Created: {{ expense.created_at }} UTC</p>
-	<p>Updated: {{ expense.updated_at }} UTC</p>
+	<p>Created: {{ expense.created_at|timezone:"America/Los_Angeles" }} PT</p>
+	<p>Updated: {{ expense.updated_at|timezone:"America/Los_Angeles" }} PT</p>
 </div>
 {% endblock %}

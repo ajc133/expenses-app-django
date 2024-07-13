@@ -1,9 +1,12 @@
+{% load tz %}
 <table>
 	<tbody>
 		{% for x in expenses %}
 		<tr>
-			<td class="created-cell">{{ x.created_at|date:"M" }}<br>{{ x.created_at|date:"j" }}</td>
+			{% with date=x.created_at|timezone:"America/Los_Angeles" %}
+			<td class="created-cell">{{ date|date:"M" }}<br>{{ date|date:"j" }}</td>
 			<td class="item-cell"><a href="{% url 'expense_details' x.id %}">{{ x.item|truncatechars:20 }}</a></td>
+			{% endwith %}
 			<td class="payer-cell">{{ x.payer.first_name }}</td>
 			<td class="cost-cell">${{ x.cost|floatformat:"-2" }}</td>
 		</tr>
