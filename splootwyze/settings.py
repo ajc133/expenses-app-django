@@ -33,11 +33,16 @@ if ENVIRONMENT == "prod":
     ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOST", "")]
     CSRF_TRUSTED_ORIGINS = ["https://" + os.environ.get("ALLOWED_HOST", "")]
     SECURE_PROXY_SSL_HEADER = ("X-Forwarded-Proto", "https")
-else:
+elif ENVIRONMENT == "dev":
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
     DEBUG = True
     ALLOWED_HOSTS = ["*"]
+else:
+    import sys
+
+    print("INVALID ENVIRONMENT VALUE")
+    sys.exit(1)
 
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
