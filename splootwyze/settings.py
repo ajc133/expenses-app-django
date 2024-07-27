@@ -16,7 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENVIRONMENT = os.environ.get("ENVIRONMENT", "dev")
+ENV = os.environ.get("ENV", "dev")
 
 LOGIN_URL = "login"
 
@@ -26,14 +26,14 @@ LOGOUT_REDIRECT_URL = "main"
 
 
 # Prod security
-if ENVIRONMENT == "prod":
+if ENV == "prod":
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     DEBUG = False
     ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOST", "")]
     CSRF_TRUSTED_ORIGINS = ["https://" + os.environ.get("ALLOWED_HOST", "")]
     SECURE_PROXY_SSL_HEADER = ("X-Forwarded-Proto", "https")
-elif ENVIRONMENT == "dev":
+elif ENV == "dev":
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
     DEBUG = True

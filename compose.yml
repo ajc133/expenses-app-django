@@ -4,6 +4,8 @@ services:
     build: .
     ports:
       - "8000:8000"
+    environment:
+      ENV: dev
     volumes:
       - "$PWD/secret_key.txt:/app/secret_key.txt"
       - "$PWD/data/db.sqlite3:/app/data/db.sqlite3"
