@@ -53,7 +53,7 @@ def expenses(request: HttpRequest):
     for user in users:
         amount_spent = sum([e.cost for e in user.expense_set.all()])
         if amount_spent < total_cost / num_users:
-            owes = total_cost / num_users - amount_spent
+            owes = "{:.2f}".format(total_cost / num_users - amount_spent)
             debts.append((user.first_name, owes))
 
     template = loader.get_template("all_expenses.html")
