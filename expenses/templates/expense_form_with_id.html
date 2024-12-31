@@ -10,7 +10,8 @@
 		<p>
 			<label for="cost">Cost</label>
 			{# TODO: display 2 decimal places if they exist #}
-			<input type="number" id="cost" name="cost" step="0.01" value="{{ expense.cost|default:'' }}" required />
+			<input type="number" id="cost" name="cost" step="0.01" inputmode="decimal"
+				value="{{ expense.cost|default:'' }}" required />
 		</p>
 		<p>
 			<label for="user-name-select">Who paid?</label>
