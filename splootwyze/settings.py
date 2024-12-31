@@ -33,6 +33,8 @@ if ENV == "prod":
     ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOST", "")]
     CSRF_TRUSTED_ORIGINS = ["https://" + os.environ.get("ALLOWED_HOST", "")]
     SECURE_PROXY_SSL_HEADER = ("X-Forwarded-Proto", "https")
+    SESSION_COOKIE_AGE = 315360000  # 10 years
+    SESSION_SAVE_EVERY_REQUEST = True
 elif ENV == "dev":
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
