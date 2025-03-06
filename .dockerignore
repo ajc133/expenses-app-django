@@ -2,7 +2,7 @@
 **/__pycache__/
 *.py[cod]
 
-/data
+data
 *.sqlite3
 .git/
 .gitignore
@@ -10,7 +10,8 @@
 
 Dockerfile
 compose.yml
-poetry.lock
-productionfiles/
-pyproject.toml
+
+productionfiles
+*.sqlite3
 secret_key.txt
+.venv

@@ -1,24 +1,35 @@
 FROM python:3.12 AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.6.4 /uv /uvx /bin/
 
-# Don't buffer `stdout`:
-ENV PYTHONUNBUFFERED=1
-# Don't create `.pyc` files:
-ENV PYTHONDONTWRITEBYTECODE=1
-
+# Install the project into `/app`
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
+# Enable bytecode compilation
+ENV UV_COMPILE_BYTECODE=1
 
-RUN pip install -r requirements.txt
+# Copy from the cache instead of linking since it's a mounted volume
+ENV UV_LINK_MODE=copy
 
-COPY manage.py manage.py
-COPY ./splootwyze ./splootwyze
-COPY ./expenses ./expenses
-COPY ./mystaticfiles/ ./mystaticfiles/
+# Install the project's dependencies using the lockfile and settings
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project --no-dev
+
+# Then, add the rest of the project source code and install it
+# Installing separately from its dependencies allows optimal layer caching
+ADD . /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
+
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Set dummy value for collectstatic, no need for secret key here
 RUN SECRET_KEY_FILE=manage.py python manage.py collectstatic --no-input
 
+# Reset the entrypoint, don't invoke `uv`
+ENTRYPOINT []
+
 EXPOSE 8000/tcp
-COPY ./docker-entrypoint.sh /app/docker-entrypoint.sh
 CMD ["/app/docker-entrypoint.sh"]
