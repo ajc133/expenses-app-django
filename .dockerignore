@@ -15,3 +15,4 @@ productionfiles
 *.sqlite3
 secret_key.txt
 .venv
+.env
