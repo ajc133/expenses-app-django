@@ -19,7 +19,4 @@ urlpatterns = [
     path(
         "expenses/<int:expense_id>/delete", views.expense_delete, name="expense_delete"
     ),
-]
-
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

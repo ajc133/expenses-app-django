@@ -87,16 +87,16 @@ def update_expense(
     if item is None or cost is None:
         return HttpResponseBadRequest()
 
-    existing = Expense.objects.filter(id=expense_id)
-    existing.update(
-        item=item,
-        cost=cost,
-        payer=payer_id,
-        submitter=submitter,
-        updated_at=datetime.now(tz=timezone.utc),
-    )
+    # The save() method handles image upload properly, and update()
+    # does not. That's why I changed this block to call save().
+    existing = Expense.objects.get(id=expense_id)
+    existing.item = item
+    existing.cost = cost
+    existing.payer = User.objects.get(id=payer_id)
+    existing.submitter = submitter
     if receipt_photo:
-        existing.update(receipt_photo=receipt_photo)
+        existing.receipt_photo = receipt_photo
+    existing.save()
     return HttpResponseRedirect(
         reverse("expense_details", kwargs={"expense_id": expense_id})
     )
