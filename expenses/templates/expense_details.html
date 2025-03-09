@@ -14,5 +14,11 @@ Details about {{ expense.item }}
 	<p>Submitted by: {{ submitter.first_name }}</p>
 	<p>Created: {{ expense.created_at|timezone:"America/Los_Angeles" }} PT</p>
 	<p>Updated: {{ expense.updated_at|timezone:"America/Los_Angeles" }} PT</p>
+	{% if expense.receipt_photo %}
+	<picture>
+		<source srcset="{{ expense.receipt_photo.url }}">
+		<img src="{{ expense.receipt_photo.url }}" alt=" Receipt photo image" style="width:400px;">
+	</picture>
+	{% endif %}
 </div>
 {% endblock %}

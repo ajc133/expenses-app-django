@@ -18,6 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV = os.environ.get("ENV", "dev")
 
+MEDIA_URL = "photos/"
+MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_URL)
+
 LOGIN_URL = "login"
 
 LOGIN_REDIRECT_URL = "main"

@@ -28,6 +28,7 @@ def expenses(request: HttpRequest):
         form = request.POST
         item = form.get("item")
         cost = form.get("cost")
+        receipt_photo = request.FILES.get("receipt-photo")
         payer_id = form.get("user-id")
         if item is None or cost is None:
             return HttpResponseBadRequest()
@@ -38,6 +39,7 @@ def expenses(request: HttpRequest):
             item=item,
             cost=cost,
             submitter=submitter,
+            receipt_photo=receipt_photo,
         ).save()
         return HttpResponseRedirect(reverse("expenses"))
 
@@ -81,16 +83,20 @@ def update_expense(
     item = form.get("item")
     cost = form.get("cost")
     payer_id = form.get("user-id")
+    receipt_photo = request.FILES.get("receipt-photo")
     if item is None or cost is None:
         return HttpResponseBadRequest()
 
-    Expense.objects.filter(id=expense_id).update(
+    existing = Expense.objects.filter(id=expense_id)
+    existing.update(
         item=item,
         cost=cost,
         payer=payer_id,
         submitter=submitter,
         updated_at=datetime.now(tz=timezone.utc),
     )
+    if receipt_photo:
+        existing.update(receipt_photo=receipt_photo)
     return HttpResponseRedirect(
         reverse("expense_details", kwargs={"expense_id": expense_id})
     )

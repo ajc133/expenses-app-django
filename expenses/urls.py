@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 from django.views.generic.base import RedirectView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="expenses"), name="main"),
@@ -17,3 +20,6 @@ urlpatterns = [
         "expenses/<int:expense_id>/delete", views.expense_delete, name="expense_delete"
     ),
 ]
+
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

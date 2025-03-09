@@ -1,5 +1,5 @@
-<form method="post" {% if expense %} action="{% url 'expense_edit' expense.id %}" {% else %}
-	action="{% url 'expenses' %}" {% endif %}>
+<form method="post" enctype="multipart/form-data" {% if expense %} action="{% url 'expense_edit' expense.id %}" {% else
+	%} action="{% url 'expenses' %}" {% endif %}>
 	{% csrf_token %}
 	<fieldset>
 		<legend>Expense Details</legend>
@@ -20,6 +20,11 @@
 			<option value={{ user.id }}>{{ user.first_name }}</option>
 			{% endfor %}
 			</select>
+		</p>
+		<p>
+			<label for="receipt-photo">Who paid?</label>
+			<input type="file" id="receipt-photo" name="receipt-photo" />
+			</input>
 		</p>
 		<p>
 			<button type="submit">Submit</button>
