@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.files.storage import FileSystemStorage
+from django_resized import ResizedImageField
 
-receipts = FileSystemStorage(location="./receipts")
+
+def user_directory_path(instance, filename):
+    return "receipts/user_{0}/{1}".format(instance.submitter.id, filename)
 
 
 class Expense(models.Model):
@@ -12,14 +14,12 @@ class Expense(models.Model):
     submitter = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="expense_submitter", null=False
     )
-    receipt_photo = models.ImageField(upload_to="receipts", null=True)
+    receipt_photo = ResizedImageField(
+        size=[500, 800], upload_to=user_directory_path, null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # def save(self, *args, **kwargs):
-    #     do_something()
-    #     super().save(*args, **kwargs)  # Call the "real" save() method.
-    #     do_something_else()
     def __str__(self):
         return f"{self.item} bought by {self.payer.first_name}"
 

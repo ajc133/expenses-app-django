@@ -18,8 +18,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ENV = os.environ.get("ENV", "dev")
 
-MEDIA_URL = "uploads/"
-MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 LOGIN_URL = "login"
 
@@ -27,6 +25,8 @@ LOGIN_REDIRECT_URL = "main"
 
 LOGOUT_REDIRECT_URL = "main"
 
+MEDIA_URL = "uploads/"
+MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 # Prod security
 if ENV == "prod":
@@ -44,10 +44,7 @@ elif ENV == "dev":
     DEBUG = True
     ALLOWED_HOSTS = ["*"]
 else:
-    import sys
-
-    print("INVALID ENVIRONMENT VALUE")
-    sys.exit(1)
+    raise SystemExit("INVALID ENVIRONMENT VALUE")
 
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -154,3 +151,24 @@ STATICFILES_DIRS = [BASE_DIR / "mystaticfiles"]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
+#
+# if ENV == "prod":
+#     STORAGES = {
+#         "default": {
+#             "BACKEND": "storages.backends.s3.S3Storage",
+#             "OPTIONS": {},
+#         },
+#     }
+# elif ENV == "dev":
+#     STORAGES = {
+#         "default": {
+#             "BACKEND": "django.core.files.storage.FileSystemStorage",
+#         },
+#         "staticfiles": {
+#             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+#         },
+#     }
+# else:
+#     raise SystemExit("INVALID ENVIRONMENT VALUE")
