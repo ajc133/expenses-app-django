@@ -1,9 +1,15 @@
 services:
+  webserver:
+    image: docker.io/caddy:2.9
+    volumes:
+      - "$PWD/caddy:/etc/caddy"
+      - "$PWD/uploads:/app/uploads"
+      - "$PWD/productionfiles:/app/static"
+    ports:
+      - "8000:8000"
   app:
     container_name: splootwyze
     build: .
-    ports:
-      - "8000:8000"
     environment:
       ENV: dev
     volumes:

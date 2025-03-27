@@ -1,0 +1,11 @@
+:8000 {
+	root * /app
+	@notStatic {
+		not {
+			path /static/*
+			path /uploads/*
+		}
+	}
+	reverse_proxy @notStatic splootwyze:8000
+	file_server
+}
