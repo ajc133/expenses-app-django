@@ -18,3 +18,8 @@ manage = "manage:main"
 
 [tool.django-stubs]
 django_settings_module = "splootwyze.settings"
+
+[dependency-groups]
+dev = [
+    "datasette>=0.65.1",
+]
