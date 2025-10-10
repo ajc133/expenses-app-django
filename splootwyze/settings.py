@@ -50,7 +50,8 @@ if not DEBUG:
     SESSION_SAVE_EVERY_REQUEST = True
 
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-if _secret_key_file := env("SPLOOTWYZE_SECRET_KEY_FILE"):
+# not using `env` because it raises an exception
+if _secret_key_file := os.environ.get("SPLOOTWYZE_SECRET_KEY_FILE"):
     SECRET_KEY = Path(_secret_key_file).read_text()
 else:
     # Raises Django's ImproperlyConfigured
