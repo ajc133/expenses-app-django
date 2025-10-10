@@ -7,7 +7,7 @@ dev-splootwyze.ajcajc.com {
 	}
 
 	handle /* {
-		reverse_proxy unix//run/dailyreese.sock
+		reverse_proxy unix//run/splootwyze.sock
 	}
 }
 
