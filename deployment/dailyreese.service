@@ -1,0 +1,31 @@
+# https://docs.gunicorn.org/en/stable/deploy.html
+[Unit]
+Description=gunicorn daemon
+Requires=splootwyze.socket
+After=network.target
+
+[Service]
+# gunicorn can let systemd know when it is ready
+Type=notify
+NotifyAccess=main
+User=splootwyze
+Group=splootwyze
+# using DynamicUser is too tough
+DynamicUser=false
+WorkingDirectory=/home/splootwyze/applicationroot
+ExecStartPre=/home/splootwyze/applicationroot/.venv/bin/python manage.py migrate
+ExecStartPre=/home/splootwyze/applicationroot/.venv/bin/python manage.py collectstatic --no-input
+ExecStart=/home/splootwyze/applicationroot/.venv/bin/gunicorn splootwyze.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+# if your app does not need administrative capabilities, let systemd know
+ProtectSystem=full
+# Creates /run/splootwyze at start, gets removed at stop
+RuntimeDirectory=splootwyze
+# Create a directory for persistent files. Gets created under /var/lib
+StateDirectory=splootwyze
+
+[Install]
+WantedBy=multi-user.target

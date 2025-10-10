@@ -12,12 +12,22 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ENV = os.environ.get("ENV", "dev")
+env = environ.Env(
+    # set casting, default value
+    SPLOOTWYZE_DEBUG=(bool, False),
+    SPLOOTWYZE_MEDIA_ROOT=(str, BASE_DIR / "media"),
+    SPLOOTWYZE_STATIC_ROOT=(str, BASE_DIR / "staticfiles"),
+    SPLOOTWYZE_ALLOWED_HOSTS=(list, ["127.0.0.1", "localhost"]),
+    SPLOOTWYZE_SECRET_KEY_FILE=(str, ""),
+    SPLOOTWYZE_SQLITE_PATH=(str, BASE_DIR / "db.sqlite3"),
+)
 
+DEBUG = env("SPLOOTWYZE_DEBUG")
 
 LOGIN_URL = "login"
 
@@ -26,30 +36,26 @@ LOGIN_REDIRECT_URL = "main"
 LOGOUT_REDIRECT_URL = "main"
 
 MEDIA_URL = "uploads/"
-MEDIA_ROOT = BASE_DIR / MEDIA_URL
+
+MEDIA_ROOT = env("SPLOOTWYZE_MEDIA_ROOT")
+
+ALLOWED_HOSTS = env("SPLOOTWYZE_ALLOWED_HOSTS")
+
+CSRF_TRUSTED_ORIGINS = ["https://" + host for host in ALLOWED_HOSTS]
 
 # Prod security
-if ENV == "prod":
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
-    DEBUG = False
-    ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOST", "")]
-    CSRF_TRUSTED_ORIGINS = ["https://" + os.environ.get("ALLOWED_HOST", "")]
+if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("X-Forwarded-Proto", "https")
     SESSION_COOKIE_AGE = 315360000  # 10 years
     SESSION_SAVE_EVERY_REQUEST = True
-elif ENV == "dev":
-    CSRF_COOKIE_SECURE = False
-    SESSION_COOKIE_SECURE = False
-    DEBUG = True
-    ALLOWED_HOSTS = ["*"]
-else:
-    raise SystemExit("INVALID ENVIRONMENT VALUE")
 
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-with open(os.environ.get("SECRET_KEY_FILE", "secret_key.txt")) as f:
-    SECRET_KEY = f.read().strip()
+if _secret_key_file := env("SPLOOTWYZE_SECRET_KEY_FILE"):
+    SECRET_KEY = Path(_secret_key_file).read_text()
+else:
+    # Raises Django's ImproperlyConfigured
+    # exception if SECRET_KEY not in os.environ
+    SECRET_KEY = env("SPLOOTWYZE_SECRET_KEY")
 
 
 # Application definition
@@ -60,6 +66,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "expenses",
 ]
@@ -102,7 +109,7 @@ WSGI_APPLICATION = "splootwyze.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "data/db.sqlite3",
+        "NAME": env("SPLOOTWYZE_SQLITE_PATH"),
     }
 }
 
@@ -131,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Los_Angeles"
 
 USE_I18N = True
 
@@ -141,7 +148,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_ROOT = BASE_DIR / "productionfiles"
+STATIC_ROOT = env("SPLOOTWYZE_STATIC_ROOT")
 
 STATIC_URL = "static/"
 
@@ -152,23 +159,15 @@ STATICFILES_DIRS = [BASE_DIR / "mystaticfiles"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# Plugins
+
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
-#
-# if ENV == "prod":
-#     STORAGES = {
-#         "default": {
-#             "BACKEND": "storages.backends.s3.S3Storage",
-#             "OPTIONS": {},
-#         },
-#     }
-# elif ENV == "dev":
-#     STORAGES = {
-#         "default": {
-#             "BACKEND": "django.core.files.storage.FileSystemStorage",
-#         },
-#         "staticfiles": {
-#             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-#         },
-#     }
-# else:
-#     raise SystemExit("INVALID ENVIRONMENT VALUE")

@@ -1,0 +1,13 @@
+dev-splootwyze.ajcajc.com {
+	encode zstd gzip
+
+	handle_path /media/* {
+		root * {$SPLOOTWYZE_MEDIA_ROOT:./media}
+		file_server
+	}
+
+	handle /* {
+		reverse_proxy unix//run/dailyreese.sock
+	}
+}
+

@@ -1,8 +1,7 @@
-__pycache__
-/productionfiles
 *.sqlite3
-secret_key.txt
-/.venv
 .env
 uploads/
 /backups
+
+/.venv
+__pycache__

@@ -1,0 +1,238 @@
+# Usage:
+#   ansible-playbook -i 'example.com,' deployment/vps.yml -u USERNAME --ask-become-pass --vault-password-file deployment/vault_pass.txt
+---
+- hosts: all
+  vars:
+    app_user: splootwyze
+    app_group: "{{ app_user }}"
+    app_home: "/home/{{ app_user }}"
+    app_repo: "{{ app_home }}/splootwyze.git"
+    app_root: "{{ app_home }}/applicationroot"
+    backup_root: "/mnt/media-and-backups/backups"
+    media_root: "/srv/{{ app_user }}/media"
+    public_root: "/srv/{{ app_user }}/public"
+    static_root: "/srv/{{ app_user }}/staticfiles"
+
+    packages:
+      - ffmpeg
+      - git
+      - python3-pip
+      - python3.13-venv
+      - rsync
+      - sqlite3
+      - virtualenv
+
+    service_dirs:
+      - /etc/systemd/system/{{ app_user }}.service.d/
+      - /etc/systemd/system/caddy.service.d/
+
+    app_dirs:
+      - "{{ backup_root }}/{{ app_user }}"
+      - "{{ media_root }}"
+      - "{{ public_root }}"
+      - "{{ static_root }}"
+
+  tasks:
+    - name: Install required packages
+      become: true
+      apt:
+        update_cache: true
+        name: "{{ packages }}"
+
+    - name: Ensure application user exists
+      become: true
+      user:
+        name: "{{ app_user }}"
+        create_home: true
+        shell: /bin/bash
+
+    - name: Add current user to app group
+      become: true
+      user:
+        name: "{{ ansible_user_id }}"
+        groups: "{{ app_group }}"
+        append: true
+
+    - name: Add local SSH key for {{ app_user }}
+      become: true
+      authorized_key:
+        user: "{{ app_user }}"
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_ed25519.pub') }}"
+
+    - name: Configure global git defaults
+      remote_user: "{{ app_user }}"
+      copy:
+        dest: "{{ app_home }}/.gitconfig"
+        content: |
+          [init]
+          defaultBranch = main
+
+    - name: Initialize bare repo if missing
+      remote_user: "{{ app_user }}"
+      command: git init --bare "{{ app_repo }}"
+      args:
+        creates: "{{ app_repo }}/HEAD"
+
+    - name: Push local repo
+      delegate_to: localhost
+      command: git push www main
+
+    - name: Clone or update working repo
+      remote_user: "{{ app_user }}"
+      git:
+        repo: "{{ app_repo }}"
+        dest: "{{ app_root }}"
+        clone: true
+        update: true
+      notify: restart splootwyze
+
+    - name: Install Python dependencies
+      remote_user: "{{ app_user }}"
+      pip:
+        requirements: "{{ app_root }}/requirements.txt"
+        virtualenv: "{{ app_root }}/.venv"
+
+    - name: Create systemd drop-in directories
+      become: true
+      file:
+        path: "{{ item }}"
+        state: directory
+        recurse: true
+      loop: "{{ service_dirs }}"
+
+    - name: Ensure web directories exist and owned by {{ app_user }}
+      become: true
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0775"
+      loop: "{{ app_dirs }}"
+
+    - name: Copy static icons
+      remote_user: "{{ app_user }}"
+      synchronize:
+        src: "../icons/"
+        dest: "{{ public_root }}/"
+
+    - name: Copy manifest.json
+      become: true
+      copy:
+        src: manifest.json
+        dest: "{{ public_root }}/manifest.json"
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: "0644"
+
+    - name: Install systemd unit files
+      become: true
+      copy:
+        src: "{{ item.src }}"
+        dest: "/etc/systemd/system/{{ item.dest }}"
+      loop:
+        - { src: "splootwyze.service", dest: "splootwyze.service" }
+        - { src: "splootwyze.socket", dest: "splootwyze.socket" }
+      notify: restart splootwyze
+
+    - name: Deploy env configuration to services
+      become: true
+      copy:
+        src: 50-splootwyze-env.conf
+        dest: "{{ item }}"
+      loop:
+        - /etc/systemd/system/splootwyze.service.d/
+        - /etc/systemd/system/caddy.service.d/
+      notify: reload caddy
+
+    - name: Optionally configure systemd-creds secret key
+      when: setup_creds | default(false)
+      block:
+        - name: Initialize systemd-creds
+          become: true
+          command: systemd-creds setup
+
+        - name: Encrypt secret key credential
+          become: true
+          community.general.systemd_creds_encrypt:
+            name: "{{ app_user }}-secret-key"
+            secret: "{{ vault_secret_key }}"
+            pretty: true
+          register: secret_key
+
+        - name: Write systemd drop-in with secret key env
+          become: true
+          copy:
+            dest: "/etc/systemd/system/{{ app_user }}.service.d/51-secret-key.conf"
+            content: |
+              [Service]
+              {{ secret_key.value }}
+              Environment=SPLOOTWYZE_SECRET_KEY_FILE=%d/{{ app_user }}-secret-key
+          notify: restart splootwyze
+
+    - name: Deploy Caddyfile
+      become: true
+      copy:
+        src: Caddyfile.prod
+        dest: /etc/caddy/sites-enabled/splootwyze.ajcajc.com
+      notify: reload caddy
+
+    - name: Install backup script
+      become: true
+      copy:
+        dest: /usr/local/bin/backup-{{ app_user }}.sh
+        mode: "0777"
+        content: |
+          #!/bin/bash
+          DATE=$(date +"%Y-%m-%d_%H-%M-%S")
+          BACKUP_FILE="{{ backup_root }}/{{ app_user }}/${DATE}.sqlite3"
+          sqlite3 /var/lib/{{ app_user }}/db.sqlite3 ".backup '$BACKUP_FILE'"
+
+    - name: Install backup service and timer
+      become: true
+      copy:
+        dest: "/etc/systemd/system/{{ item.name }}"
+        content: "{{ item.content }}"
+      loop:
+        - name: "{{ app_user }}-backup.service"
+          content: |
+            [Unit]
+            Description=Back up {{ app_user }} sqlite db
+
+            [Service]
+            Type=oneshot
+            User={{ app_user }}
+            Group={{ app_group }}
+            ExecStart=/usr/local/bin/backup-{{ app_user }}.sh
+
+        - name: "{{ app_user }}-backup.timer"
+          content: |
+            [Unit]
+            Description=Back up {{ app_user }} db
+
+            [Timer]
+            OnCalendar=daily
+
+    - name: Enable backup timer
+      become: true
+      systemd:
+        name: "{{ app_user }}-backup.timer"
+        state: started
+        enabled: true
+        daemon_reload: true
+
+  handlers:
+    - name: reload caddy
+      become: true
+      systemd:
+        name: caddy.service
+        state: reloaded
+        daemon_reload: true
+
+    - name: restart splootwyze
+      become: true
+      systemd:
+        name: "{{ app_user }}.service"
+        state: restarted
+        daemon_reload: true
