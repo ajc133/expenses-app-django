@@ -17,18 +17,24 @@ import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env = environ.Env(
+# FileAwareEnv lets me pass SPLOOTWYZE_SECRET_KEY_FILE and it'll be read into SPLOOTWYZE_SECRET_KEY for me
+# https://django-environ.readthedocs.io/en/latest/tips.html#docker-style-file-based-variables
+env = environ.FileAwareEnv(
     # set casting, default value
     SPLOOTWYZE_DEBUG=(bool, False),
     SPLOOTWYZE_MEDIA_ROOT=(str, BASE_DIR / "media"),
     SPLOOTWYZE_STATIC_ROOT=(str, BASE_DIR / "staticfiles"),
     SPLOOTWYZE_ALLOWED_HOSTS=(list, ["127.0.0.1", "localhost"]),
-    SPLOOTWYZE_SECRET_KEY=(str, ""),
-    SPLOOTWYZE_SECRET_KEY_FILE=(str, ""),
     SPLOOTWYZE_SQLITE_PATH=(str, BASE_DIR / "db.sqlite3"),
 )
 
+# Take environment variables from .env file
+environ.Env.read_env(BASE_DIR / ".env")
+
 DEBUG = env("SPLOOTWYZE_DEBUG")
+
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+SECRET_KEY = env("SPLOOTWYZE_SECRET_KEY")
 
 LOGIN_URL = "login"
 
@@ -49,16 +55,6 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("X-Forwarded-Proto", "https")
     SESSION_COOKIE_AGE = 315360000  # 10 years
     SESSION_SAVE_EVERY_REQUEST = True
-
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-# not using `env` because it raises an exception
-if _secret_key_file := os.environ.get("SPLOOTWYZE_SECRET_KEY_FILE"):
-    SECRET_KEY = Path(_secret_key_file).read_text()
-else:
-    # Raises Django's ImproperlyConfigured
-    # exception if SECRET_KEY not in os.environ
-    SECRET_KEY = env("SPLOOTWYZE_SECRET_KEY")
-
 
 # Application definition
 
