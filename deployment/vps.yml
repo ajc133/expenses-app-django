@@ -153,13 +153,25 @@
           become: true
           command: systemd-creds setup
 
+        # encrypted with the following command
+        # `ansible-vault encrypt_string --vault-password-file deployment/vault_pass.txt`
         - name: Encrypt secret key credential
           become: true
           community.general.systemd_creds_encrypt:
             name: "{{ app_user }}-secret-key"
-            secret: "{{ vault_secret_key }}"
+            secret: "{{ secret_key }}"
             pretty: true
           register: secret_key
+          vars:
+            secret_key: !vault |
+              $ANSIBLE_VAULT;1.1;AES256
+              65396665653165646437323139313533666332636166643336346338303234646435386263323561
+              3462663734323636303236363963663130663935383564630a383339373664373133646565613162
+              39316266333066316333323362336664303734343230396265326464316239643961396562376462
+              3664613661666262610a396136663831366533633733333035616238616438323636336138626432
+              63333737373062373130653937353565353263383361366662646433333464326636393033393661
+              37653036313934363466343830393737363531363261653066663862383661363431396232663666
+              613039653664666330333065353162623234
 
         - name: Write systemd drop-in with secret key env
           become: true
