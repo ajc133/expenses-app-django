@@ -183,10 +183,18 @@
               Environment=SPLOOTWYZE_SECRET_KEY_FILE=%d/{{ app_user }}-secret-key
           notify: restart splootwyze
 
-    - name: Deploy Caddyfile
+    - name: Copy Caddyfile
       become: true
       copy:
         src: Caddyfile.prod
+        dest: /etc/caddy/sites-available/splootwyze.ajcajc.com
+      notify: reload caddy
+
+    - name: Enable splootwyze Caddyfile
+      become: true
+      file:
+        src: /etc/caddy/sites-available/splootwyze.ajcajc.com
+        state: link
         dest: /etc/caddy/sites-enabled/splootwyze.ajcajc.com
       notify: reload caddy
 
