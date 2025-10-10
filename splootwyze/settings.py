@@ -23,6 +23,7 @@ env = environ.Env(
     SPLOOTWYZE_MEDIA_ROOT=(str, BASE_DIR / "media"),
     SPLOOTWYZE_STATIC_ROOT=(str, BASE_DIR / "staticfiles"),
     SPLOOTWYZE_ALLOWED_HOSTS=(list, ["127.0.0.1", "localhost"]),
+    SPLOOTWYZE_SECRET_KEY=(str, ""),
     SPLOOTWYZE_SECRET_KEY_FILE=(str, ""),
     SPLOOTWYZE_SQLITE_PATH=(str, BASE_DIR / "db.sqlite3"),
 )
