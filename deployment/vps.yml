@@ -10,7 +10,6 @@
     app_root: "{{ app_home }}/applicationroot"
     backup_root: "/mnt/media-and-backups/backups"
     media_root: "/srv/{{ app_user }}/media"
-    public_root: "/srv/{{ app_user }}/public"
     static_root: "/srv/{{ app_user }}/staticfiles"
 
     packages:
@@ -29,7 +28,6 @@
     app_dirs:
       - "{{ backup_root }}/{{ app_user }}"
       - "{{ media_root }}"
-      - "{{ public_root }}"
       - "{{ static_root }}"
 
   tasks:
@@ -110,21 +108,6 @@
         group: "{{ app_group }}"
         mode: "0775"
       loop: "{{ app_dirs }}"
-
-    - name: Copy static icons
-      remote_user: "{{ app_user }}"
-      synchronize:
-        src: "../icons/"
-        dest: "{{ public_root }}/"
-
-    - name: Copy manifest.json
-      become: true
-      copy:
-        src: manifest.json
-        dest: "{{ public_root }}/manifest.json"
-        owner: "{{ app_user }}"
-        group: "{{ app_group }}"
-        mode: "0644"
 
     - name: Install systemd unit files
       become: true

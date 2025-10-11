@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import os
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,6 +23,7 @@ env = environ.FileAwareEnv(
     SPLOOTWYZE_DEBUG=(bool, False),
     SPLOOTWYZE_MEDIA_ROOT=(str, BASE_DIR / "media"),
     SPLOOTWYZE_STATIC_ROOT=(str, BASE_DIR / "staticfiles"),
+    SPLOOTWYZE_WEB_ROOT=(str, BASE_DIR / "staticfiles/root_files"),
     SPLOOTWYZE_ALLOWED_HOSTS=(list, ["127.0.0.1", "localhost"]),
     SPLOOTWYZE_SQLITE_PATH=(str, BASE_DIR / "db.sqlite3"),
 )
@@ -42,7 +42,7 @@ LOGIN_REDIRECT_URL = "main"
 
 LOGOUT_REDIRECT_URL = "main"
 
-MEDIA_URL = "uploads/"
+MEDIA_URL = "media/"
 
 MEDIA_ROOT = env("SPLOOTWYZE_MEDIA_ROOT")
 
@@ -143,12 +143,28 @@ USE_I18N = True
 USE_TZ = True
 
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",  # if DEBUG else "WARNING",
+    },
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_ROOT = env("SPLOOTWYZE_STATIC_ROOT")
 
 STATIC_URL = "static/"
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -167,3 +183,5 @@ STORAGES = {
 # Plugins
 
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
+
+WHITENOISE_ROOT = env("SPLOOTWYZE_WEB_ROOT")

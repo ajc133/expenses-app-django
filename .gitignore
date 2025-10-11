@@ -2,6 +2,7 @@
 .env
 uploads/
 /backups
+/staticfiles
 
 /.venv
 __pycache__
