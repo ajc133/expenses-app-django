@@ -19,6 +19,8 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
+from debug_toolbar.toolbar import debug_toolbar_urls
+
 urlpatterns = [
     path("", include("expenses.urls")),
     path(
@@ -32,4 +34,4 @@ urlpatterns = [
         name="logout",
     ),
     path("admin/", admin.site.urls),
-]
+] + debug_toolbar_urls()

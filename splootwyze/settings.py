@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "debug_toolbar",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "expenses",
@@ -78,6 +79,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "splootwyze.urls"
@@ -185,3 +187,6 @@ STORAGES = {
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
 
 WHITENOISE_ROOT = env("SPLOOTWYZE_WEB_ROOT")
+
+# django-debug-toolbar
+INTERNAL_IPS = ["127.0.0.1"]
