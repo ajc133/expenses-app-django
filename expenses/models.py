@@ -7,11 +7,16 @@ def user_directory_path(instance, filename):
 
 
 class Expense(models.Model):
-    payer = models.ForeignKey(User, on_delete=models.CASCADE)
+    payer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="expenses_paid"
+    )
     item = models.CharField(max_length=255)
     cost = models.FloatField()
     submitter = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="expense_submitter", null=False
+        User, on_delete=models.CASCADE, related_name="expenses_submitted", null=False
+    )
+    group = models.ForeignKey(
+        "auth.Group", on_delete=models.CASCADE, related_name="group", null=False
     )
     receipt_photo = models.ImageField(upload_to="receipts", null=True)
     created_at = models.DateTimeField(auto_now_add=True)

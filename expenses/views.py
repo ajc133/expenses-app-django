@@ -53,7 +53,7 @@ def expenses(request: HttpRequest):
     num_users = len(users)
     debts = []
     for user in users:
-        amount_spent = sum([e.cost for e in user.expense_set.all()])
+        amount_spent = sum([e.cost for e in user.expenses_paid.all()])
         if amount_spent < total_cost / num_users:
             owes = "{:.2f}".format(total_cost / num_users - amount_spent)
             debts.append((user.first_name, owes))
@@ -141,7 +141,7 @@ def users(request: HttpRequest):
 @login_required
 def user_details(request: HttpRequest, user_id):
     user = User.objects.get(id=user_id)
-    user_expenses = user.expense_set.order_by("-created_at").all()
+    user_expenses = user.expenses_paid.order_by("-created_at").all()
     template = loader.get_template("user_details.html")
     context = {"user": user, "expenses": user_expenses}
     return HttpResponse(template.render(context, request))
