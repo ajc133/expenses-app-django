@@ -78,6 +78,136 @@
     }
   },
   {
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+      "action_time": "2025-10-11T19:39:22.942Z",
+      "user": 1,
+      "content_type": 7,
+      "object_id": "7",
+      "object_repr": "chocolate bought by John",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+      "action_time": "2025-10-11T19:48:49.447Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "4",
+      "object_repr": "steve",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+      "action_time": "2025-10-11T19:49:03.434Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "4",
+      "object_repr": "steve",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Groups\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+      "action_time": "2025-10-11T19:55:06.545Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "4",
+      "object_repr": "steve",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Staff status\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+      "action_time": "2025-10-11T19:55:23.069Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "4",
+      "object_repr": "steve",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Staff status\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+      "action_time": "2025-10-11T21:56:46.716Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "5",
+      "object_repr": "adam",
+      "action_flag": 1,
+      "change_message": "[{\"added\": {}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+      "action_time": "2025-10-11T21:56:59.634Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "5",
+      "object_repr": "adam",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Groups\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+      "action_time": "2025-10-11T22:26:34.498Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "3",
+      "object_repr": "john",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Groups\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+      "action_time": "2025-10-11T22:26:52.722Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "3",
+      "object_repr": "john",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Groups\"]}}]"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+      "action_time": "2025-10-11T22:35:04.016Z",
+      "user": 1,
+      "content_type": 4,
+      "object_id": "4",
+      "object_repr": "steve",
+      "action_flag": 2,
+      "change_message": "[{\"changed\": {\"fields\": [\"Groups\"]}}]"
+    }
+  },
+  {
     "model": "auth.permission",
     "pk": 1,
     "fields": {
@@ -460,7 +590,7 @@
     "pk": 3,
     "fields": {
       "password": "pbkdf2_sha256$1000000$i2UHfdf8YURjx7ptPaOmqO$i9v3prT56+i/ganD2GZfaUCLmYv8JgVcJzQCFxFN4js=",
-      "last_login": "2025-10-11T19:01:20.469Z",
+      "last_login": "2025-10-11T22:14:26Z",
       "is_superuser": false,
       "username": "john",
       "first_name": "John",
@@ -471,6 +601,44 @@
       "date_joined": "2024-12-31T22:19:54Z",
       "groups": [
         1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$8B3CYJSrFsfaiR4iEbxrOC$E5mOJmgrHEFoCeCp4r5b0XFQmoCs03ZwhO317/vRvvw=",
+      "last_login": "2025-10-11T19:49:22Z",
+      "is_superuser": false,
+      "username": "steve",
+      "first_name": "Steve",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-10-11T19:48:48Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$1000000$Dj9Nh8uPJulpjuZODWleQq$vq80i1wzjsbvvzssphG74bs5d6vtSJr0pBAEuhpkBxI=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "adam",
+      "first_name": "Adam",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-10-11T21:56:45Z",
+      "groups": [
+        4
       ],
       "user_permissions": []
     }
@@ -557,6 +725,14 @@
   },
   {
     "model": "sessions.session",
+    "pk": "4cxz11spo0d8s1rvx8ng919nleds0a5q",
+    "fields": {
+      "session_data": ".eJxVjEEOwiAQRe_C2hCKwIBL9z0DGYZBqoYmpV0Z765NutDtf-_9l4i4rTVunZc4ZXERZ3H63RLSg9sO8h3bbZY0t3WZktwVedAuxznz83q4fwcVe_3WWqVknfJs2HgVXLYuaMZB6QCFMDCUQsZ4ACIogyONJYHhYjlrJhbvD98ZOKs:1v7hr8:Ln7SQX9Qqk3O23Fnzy3ZHz0C7odnKqR2IijPyWDLqv4",
+      "expire_date": "2025-10-25T22:14:26.710Z"
+    }
+  },
+  {
+    "model": "sessions.session",
     "pk": "99520752nz8whw3jen2c97abxh9d7rmw",
     "fields": {
       "session_data": ".eJxVjEEOwiAQRe_C2hCKwIBL9z0DGYZBqoYmpV0Z765NutDtf-_9l4i4rTVunZc4ZXERZ3H63RLSg9sO8h3bbZY0t3WZktwVedAuxznz83q4fwcVe_3WWqVknfJs2HgVXLYuaMZB6QCFMDCUQsZ4ACIogyONJYHhYjlrJhbvD98ZOKs:1v7cfb:dRvikK79f5NDtgerOxjv28I46RuVxa-y-h5HaKQ94s0",
@@ -569,14 +745,6 @@
     "fields": {
       "session_data": ".eJxVjLsOAiEURP-F2hDeD0t7v4FcLiCrBpJltzL-u5JsoeXMOTMvEmDfathHXsOSyJlwcvrtIuAjtwnSHdqtU-xtW5dIp0IPOui1p_y8HO7fQYVR51pwsKhsLLEwF4VGcJKhEZ4XYCbxb_QapS9opHEFEvNZZ82Nsk7lQt4f8I84Cw:1v7euA:HO2U0kGuzi5qhwue34NaCxHpxPGlmJwE93e06Kuqho4",
       "expire_date": "2025-10-25T19:05:22.051Z"
-    }
-  },
-  {
-    "model": "sessions.session",
-    "pk": "megi65b6xl7d01ywaavvv5jb1br00z2j",
-    "fields": {
-      "session_data": ".eJxVjEEOwiAQRe_C2hCKwIBL9z0DGYZBqoYmpV0Z765NutDtf-_9l4i4rTVunZc4ZXERZ3H63RLSg9sO8h3bbZY0t3WZktwVedAuxznz83q4fwcVe_3WWqVknfJs2HgVXLYuaMZB6QCFMDCUQsZ4ACIogyONJYHhYjlrJhbvD98ZOKs:1v7chn:Q5Ho1JlM8TvsvfadxZ4W3VV-jsrzkMBNEIvxjiyyl3o",
-      "expire_date": "2025-10-25T16:44:27.052Z"
     }
   },
   {
@@ -619,6 +787,132 @@
       "receipt_photo": "",
       "created_at": "2025-03-07T00:27:04.856Z",
       "updated_at": "2025-10-11T19:00:10.375Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 7,
+    "fields": {
+      "payer": 3,
+      "item": "chocolate",
+      "cost": 5.0,
+      "submitter": 3,
+      "group": 1,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T19:39:22.933Z",
+      "updated_at": "2025-10-11T19:39:22.933Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 8,
+    "fields": {
+      "payer": 4,
+      "item": "test",
+      "cost": 3.0,
+      "submitter": 4,
+      "group": 4,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T20:40:24.234Z",
+      "updated_at": "2025-10-11T20:40:24.234Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 9,
+    "fields": {
+      "payer": 4,
+      "item": "test",
+      "cost": 3.0,
+      "submitter": 4,
+      "group": 4,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T20:41:06.048Z",
+      "updated_at": "2025-10-11T20:41:06.048Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 10,
+    "fields": {
+      "payer": 4,
+      "item": "test",
+      "cost": 3.0,
+      "submitter": 4,
+      "group": 4,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T20:41:28.272Z",
+      "updated_at": "2025-10-11T20:41:28.272Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 11,
+    "fields": {
+      "payer": 4,
+      "item": "test",
+      "cost": 3.0,
+      "submitter": 4,
+      "group": 4,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T20:42:04.598Z",
+      "updated_at": "2025-10-11T20:42:04.598Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 12,
+    "fields": {
+      "payer": 3,
+      "item": "millk",
+      "cost": 33.0,
+      "submitter": 3,
+      "group": 1,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T22:14:43.794Z",
+      "updated_at": "2025-10-11T22:14:43.794Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 13,
+    "fields": {
+      "payer": 2,
+      "item": "cheese",
+      "cost": 88.0,
+      "submitter": 3,
+      "group": 1,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T22:21:38.169Z",
+      "updated_at": "2025-10-11T22:21:38.169Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 14,
+    "fields": {
+      "payer": 3,
+      "item": "3",
+      "cost": 5.0,
+      "submitter": 3,
+      "group": 1,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T22:23:01.931Z",
+      "updated_at": "2025-10-11T22:23:01.931Z"
+    }
+  },
+  {
+    "model": "expenses.expense",
+    "pk": 15,
+    "fields": {
+      "payer": 3,
+      "item": "default",
+      "cost": 82.0,
+      "submitter": 3,
+      "group": 4,
+      "receipt_photo": "",
+      "created_at": "2025-10-11T22:26:14.329Z",
+      "updated_at": "2025-10-11T22:26:14.329Z"
     }
   }
 ]
