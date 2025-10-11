@@ -1,6 +1,6 @@
 *.sqlite3
 .env
-uploads/
+/media
 /backups
 /staticfiles
 

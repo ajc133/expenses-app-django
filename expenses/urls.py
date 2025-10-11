@@ -1,16 +1,12 @@
-from django.urls import path
-from . import views
-from django.views.generic.base import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import path
 
+from . import views
 
 urlpatterns = [
-    path("", RedirectView.as_view(pattern_name="expenses"), name="main"),
-    path("users/", views.users, name="users"),
-    path("users/details/<int:user_id>", views.user_details, name="user_details"),
     path("groups/", views.groups, name="groups"),
-    path("expenses/", views.expenses, name="expenses"),
+    path("groups/<int:group_id>", views.group_expenses, name="group_expenses"),
     path(
         "expenses/<int:expense_id>/details",
         views.expense_details,

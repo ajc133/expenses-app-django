@@ -18,11 +18,10 @@
 <body>
 	<div class="topnav">
 		<div>
-			<h1><a href="{% url 'expenses' %}">Splootwyze</a></h1>
+			<h1>Splootwyze</h1>
 		</div>
 		<div>
-			<p><a href="{% url 'expenses' %}">Expenses</a></p> |
-			<p><a href="{% url 'users' %}">Users</a></p> |
+			<p><a href="{% url 'groups' %}">Groups</a></p> |
 
 			{% if user.is_authenticated %}
 			<p>Welcome, {{ user.first_name }}</p> |

@@ -16,11 +16,14 @@ class Expense(models.Model):
         User, on_delete=models.CASCADE, related_name="expenses_submitted", null=False
     )
     group = models.ForeignKey(
-        "auth.Group", on_delete=models.CASCADE, related_name="group", null=False
+        "auth.Group", on_delete=models.CASCADE, related_name="expenses", null=False
     )
-    receipt_photo = models.ImageField(upload_to="receipts", null=True)
+    receipt_photo = models.ImageField(upload_to="receipts", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.item} bought by {self.payer.first_name}"

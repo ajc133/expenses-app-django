@@ -6,13 +6,13 @@ Splootwyze
 
 {% block content %}
 <div class="mycard">
-	{% include 'expense_form_with_id.html' %}
+	{% include 'expense_submit.html' %}
 </div>
 
 <div>
 	<ul>
 		{% for debt in debts %}
-		<li>{{ debt.0 }} owes ${{ debt.1 }}</li>
+		<li>{{ debt.first_name }} owes ${{ debt.owes }}</li>
 		{% endfor %}
 	</ul>
 </div>

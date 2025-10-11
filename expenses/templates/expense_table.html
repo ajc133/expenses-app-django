@@ -9,6 +9,7 @@
 			{% endwith %}
 			<td class="payer-cell">{{ x.payer.first_name }}</td>
 			<td class="cost-cell">${{ x.cost|floatformat:"-2" }}</td>
+			<td>{{ x.group.name }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

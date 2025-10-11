@@ -1,132 +1,125 @@
-from datetime import datetime, timezone
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.db.models import F, Q, Sum
+from django.forms import ValidationError
 from django.http import (
-    HttpResponse,
     HttpRequest,
-    HttpResponseBadRequest,
     HttpResponseRedirect,
 )
-from django.template import loader, RequestContext
-from django.shortcuts import get_object_or_404
-from django.db.models import Sum
-from django.http.request import QueryDict
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import (
     require_http_methods,
     require_safe,
 )
-from django.contrib.auth.decorators import login_required
+
+from .forms import ExpenseForm
 from .models import Expense, User
 
 
 @login_required
 def groups(request: HttpRequest):
-    groups = Group.objects.all().values("id", "name")
+    groups = request.user.groups.all().values("id", "name")
+    context = {"title": "Groups", "details_url": "group_expenses", "objects": groups}
+    return render(request, "basic_list.html", context)
 
-    template = loader.get_template("list.html")
-    return HttpResponse(template.render(context, request))
 
-
-@require_http_methods(["HEAD", "GET", "POST"])
 @login_required
-def expenses(request: HttpRequest):
-    context = RequestContext(request)
-    submitter = get_object_or_404(User, pk=request.user.id)
+def group_expenses(request: HttpRequest, group_id):
+    default_group = request.user.groups.first()
     if request.method == "POST":
-        form = request.POST
-        item = form.get("item")
-        cost = form.get("cost")
-        receipt_photo = request.FILES.get("receipt-photo")
-        payer_id = form.get("user-id")
-        if item is None or cost is None:
-            return HttpResponseBadRequest()
-        payer = get_object_or_404(User, pk=payer_id)
+        form = ExpenseForm(
+            request.POST,
+            request.FILES,
+            group=default_group,
+        )
+        if form.is_valid():
+            expense = form.save(commit=False)
+            expense.submitter = request.user
 
-        Expense(
-            payer=payer,
-            item=item,
-            cost=cost,
-            submitter=submitter,
-            receipt_photo=receipt_photo,
-        ).save()
-        return HttpResponseRedirect(reverse("expenses"))
+            try:
+                expense.full_clean()
+            except ValidationError as e:
+                return render(
+                    request,
+                    "400.html",
+                    context={"reason": e.message_dict},
+                    status=400,
+                )
+            expense.save()
 
-    expenses = Expense.objects.select_related("payer").order_by("-created_at").all()
+            return redirect("group_expenses", group_id)
 
-    users = list(User.objects.exclude(username="admin").exclude(pk=submitter.id).all())
-    # We always want submitter to be the first dropdown option
-    users.insert(0, submitter)
+    # FIXME: What if a user is in two groups
+    form = ExpenseForm(
+        initial={"payer": request.user, "group": default_group},
+        group=default_group,
+    )
+    group = get_object_or_404(Group, pk=group_id)
 
-    total_cost = Expense.objects.aggregate(Sum("cost"))["cost__sum"] or 0
-    num_users = len(users)
-    debts = []
-    for user in users:
-        amount_spent = sum([e.cost for e in user.expenses_paid.all()])
-        if amount_spent < total_cost / num_users:
-            owes = "{:.2f}".format(total_cost / num_users - amount_spent)
-            debts.append((user.first_name, owes))
+    # Compute total expenses and per-person share
+    total_cost = group.expenses.aggregate(total=Sum("cost"))["total"] or 0
+    member_count = group.user_set.count()
+    per_person_share = total_cost / member_count if member_count > 0 else 0
 
-    template = loader.get_template("all_expenses.html")
-    context = context.flatten() | {"expenses": expenses, "users": users, "debts": debts}
+    # Compute how much each user paid
+    group_debts = (
+        User.objects.filter(groups=group)
+        .annotate(paid=Sum("expenses_paid__cost", filter=Q(expenses_paid__group=group)))
+        .annotate(owes=per_person_share - F("paid"))
+        .filter(owes__gt=0)
+        .values("first_name", "owes")
+    )
 
-    return HttpResponse(template.render(context, request))
+    group_expenses = group.expenses.select_related("payer").all()
+    context = {
+        "expenses": group_expenses,
+        "debts": group_debts,
+        "form": form,
+    }
+
+    return render(request, "all_expenses.html", context)
 
 
 @require_safe
 @login_required
 def expense_details(request: HttpRequest, expense_id):
-    # TODO: One db query
-    expense = Expense.objects.get(id=expense_id)
-    payer = User.objects.get(id=expense.payer.id)
-    submitter_name = User.objects.get(id=expense.submitter.id)
-    template = loader.get_template("expense_details.html")
-    context = {"expense": expense, "payer": payer, "submitter": submitter_name}
-    return HttpResponse(template.render(context, request))
-
-
-def update_expense(
-    request: HttpRequest, expense_id: int, form: QueryDict
-) -> HttpResponse:
-    submitter = get_object_or_404(User, pk=request.user.id)
-    item = form.get("item")
-    cost = form.get("cost")
-    payer_id = form.get("user-id")
-    receipt_photo = request.FILES.get("receipt-photo")
-    if item is None or cost is None:
-        return HttpResponseBadRequest()
-
-    # The save() method handles image upload properly, and update()
-    # does not. That's why I changed this block to call save().
-    existing = Expense.objects.get(id=expense_id)
-    existing.item = item
-    existing.cost = cost
-    existing.payer = User.objects.get(id=payer_id)
-    existing.submitter = submitter
-    if receipt_photo:
-        existing.receipt_photo = receipt_photo
-    existing.save()
-    return HttpResponseRedirect(
-        reverse("expense_details", kwargs={"expense_id": expense_id})
-    )
+    expense = Expense.objects.select_related("payer", "submitter").get(id=expense_id)
+    context = {"expense": expense}
+    return render(request, "expense_details.html", context)
 
 
 @require_http_methods(["HEAD", "GET", "POST"])
 @login_required
 def expense_edit(request: HttpRequest, expense_id):
+    # FIXME: store this in settings
+    expense = get_object_or_404(Expense, pk=expense_id)
+    default_group = request.user.groups.first()
     if request.method == "POST":
-        return update_expense(request, expense_id, request.POST)
+        form = ExpenseForm(
+            request.POST,
+            request.FILES,
+            group=default_group,
+        )
+        if form.is_valid():
+            expense = form.save(commit=False)
+            expense.submitter = request.user
 
-    # TODO: One db query
-    expense = Expense.objects.get(id=expense_id)
-    payer = User.objects.get(id=expense.payer.id)
+            try:
+                expense.full_clean()
+            except ValidationError as e:
+                return render(
+                    request,
+                    "400.html",
+                    context={"reason": e.message_dict},
+                    status=400,
+                )
+            expense.save()
 
-    users = list(User.objects.exclude(username="admin").exclude(id=payer.id).all())
-    # We always want original payer to be the first dropdown option
-    users.insert(0, payer)
+            return redirect("expense_edit", expense.id)
+    form = ExpenseForm(instance=expense)
 
-    template = loader.get_template("expense_edit.html")
-    context = {"expense": expense, "users": users}
-    return HttpResponse(template.render(context, request))
+    return render(request, "expense_edit.html", {"form": form})
 
 
 @require_http_methods(["POST"])
@@ -134,31 +127,3 @@ def expense_edit(request: HttpRequest, expense_id):
 def expense_delete(request: HttpRequest, expense_id):
     Expense.objects.get(pk=expense_id).delete()
     return HttpResponseRedirect(reverse("expenses"))
-
-
-@require_safe
-@login_required
-def users(request: HttpRequest):
-    users = User.objects.exclude(username="admin").all()
-    template = loader.get_template("all_users.html")
-    context = {"users": users.values()}
-    return HttpResponse(template.render(context, request))
-
-
-@require_safe
-@login_required
-def user_details(request: HttpRequest, user_id):
-    user = User.objects.get(id=user_id)
-    user_expenses = user.expenses_paid.order_by("-created_at").all()
-    template = loader.get_template("user_details.html")
-    context = {"user": user, "expenses": user_expenses}
-    return HttpResponse(template.render(context, request))
-
-
-@require_safe
-@login_required
-def testing(request: HttpRequest):
-    expenses = Expense.objects.all().values()
-    template = loader.get_template("testing.html")
-    context = {"expenses": expenses}
-    return HttpResponse(template.render(context, request))
