@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Expense, Payment
+from .models import Expense
 
 
 class ExpenseAdmin(admin.ModelAdmin):
@@ -13,9 +13,4 @@ class ExpenseAdmin(admin.ModelAdmin):
     )
 
 
-class PaymentAdmin(admin.ModelAdmin):
-    list_display = ("sender", "receiver", "amount")
-
-
 admin.site.register(Expense, ExpenseAdmin)
-admin.site.register(Payment, PaymentAdmin)
