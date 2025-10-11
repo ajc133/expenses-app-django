@@ -1,4 +1,4 @@
-dev-splootwyze.ajcajc.com {
+splootwyze.ajcajc.com {
 	encode zstd gzip
 
 	handle_path /media/* {
