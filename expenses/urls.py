@@ -9,6 +9,7 @@ urlpatterns = [
     path("", RedirectView.as_view(pattern_name="expenses"), name="main"),
     path("users/", views.users, name="users"),
     path("users/details/<int:user_id>", views.user_details, name="user_details"),
+    path("groups/", views.groups, name="groups"),
     path("expenses/", views.expenses, name="expenses"),
     path(
         "expenses/<int:expense_id>/details",

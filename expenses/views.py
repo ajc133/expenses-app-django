@@ -19,6 +19,14 @@ from django.contrib.auth.decorators import login_required
 from .models import Expense, User
 
 
+@login_required
+def groups(request: HttpRequest):
+    groups = Group.objects.all().values("id", "name")
+
+    template = loader.get_template("list.html")
+    return HttpResponse(template.render(context, request))
+
+
 @require_http_methods(["HEAD", "GET", "POST"])
 @login_required
 def expenses(request: HttpRequest):
