@@ -5,6 +5,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("submit/", views.submit_expense, name="expense_submit"),
     path("groups/", views.groups, name="groups"),
     path("groups/<int:group_id>", views.group_expenses, name="group_expenses"),
     path(
@@ -16,4 +17,6 @@ urlpatterns = [
     path(
         "expenses/<int:expense_id>/delete", views.expense_delete, name="expense_delete"
     ),
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,9 +1,13 @@
-{% block content %}
+{% extends "main.html" %}
 
+{% block title %}
+Splootwyze
+{% endblock %}
+
+{% block content %}
 <form method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	{{ form.as_div }}
 	<button type="submit">Submit</button>
 </form>
-
 {% endblock %}

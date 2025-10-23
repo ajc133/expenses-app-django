@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.db.models import F, Q, Sum
 from django.forms import ValidationError
@@ -18,21 +19,11 @@ from .models import Expense, User
 
 
 @login_required
-def groups(request: HttpRequest):
-    groups = request.user.groups.all().values("id", "name")
-    context = {"title": "Groups", "details_url": "group_expenses", "objects": groups}
-    return render(request, "basic_list.html", context)
-
-
-@login_required
-def group_expenses(request: HttpRequest, group_id):
+@require_http_methods(["HEAD", "GET", "POST"])
+def submit_expense(request: HttpRequest):
     default_group = request.user.groups.first()
     if request.method == "POST":
-        form = ExpenseForm(
-            request.POST,
-            request.FILES,
-            group=default_group,
-        )
+        form = ExpenseForm(request.POST, request.FILES)
         if form.is_valid():
             expense = form.save(commit=False)
             expense.submitter = request.user
@@ -47,14 +38,26 @@ def group_expenses(request: HttpRequest, group_id):
                     status=400,
                 )
             expense.save()
-
-            return redirect("group_expenses", group_id)
+            return redirect("group_expenses", expense.group_id)
 
     # FIXME: What if a user is in two groups
     form = ExpenseForm(
         initial={"payer": request.user, "group": default_group},
-        group=default_group,
+        # group=default_group,
     )
+
+    return render(request, "expense_submit.html", {"form": form})
+
+
+@login_required
+def groups(request: HttpRequest):
+    groups = request.user.groups.all().values("id", "name")
+    context = {"title": "Groups", "details_url": "group_expenses", "objects": groups}
+    return render(request, "basic_list.html", context)
+
+
+@login_required
+def group_expenses(request: HttpRequest, group_id: int):
     group = get_object_or_404(Group, pk=group_id)
 
     # Compute total expenses and per-person share
@@ -75,10 +78,10 @@ def group_expenses(request: HttpRequest, group_id):
     context = {
         "expenses": group_expenses,
         "debts": group_debts,
-        "form": form,
+        "group": group,
     }
 
-    return render(request, "all_expenses.html", context)
+    return render(request, "group_expenses.html", context)
 
 
 @require_safe
@@ -127,3 +130,22 @@ def expense_edit(request: HttpRequest, expense_id):
 def expense_delete(request: HttpRequest, expense_id):
     Expense.objects.get(pk=expense_id).delete()
     return HttpResponseRedirect(reverse("expenses"))
+
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("expense_submit")
+        else:
+            return render(request, "login.html", {"error": "Invalid credentials"})
+    return render(request, "login.html")
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect("login")

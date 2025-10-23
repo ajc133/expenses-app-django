@@ -24,12 +24,9 @@
 			<p><a href="{% url 'groups' %}">Groups</a></p> |
 
 			{% if user.is_authenticated %}
+			<p><a href="{% url 'expense_submit' %}">Submit Expense</a></p> |
 			<p>Welcome, {{ user.first_name }}</p> |
-			<form name="logout_form" action="{% url 'logout' %}" method="post">
-				{% csrf_token %}
-				<input type="hidden" name="perform_logout" value="1">
-				<input type="submit" value="Logout" id="perform_logout_button">
-			</form>
+			<p><a href="{% url 'logout' %}">Logout</a></p>
 			{% else %}
 			<a href="{% url 'login' %}">LOGIN</a>
 			{% endif %}

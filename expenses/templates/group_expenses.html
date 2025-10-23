@@ -5,18 +5,15 @@ Splootwyze
 {% endblock %}
 
 {% block content %}
-<div class="mycard">
-	{% include 'expense_submit.html' %}
-</div>
-
+	<h1>{{ group.name }}</h1>
 <div>
 	<ul>
 		{% for debt in debts %}
-		<li>{{ debt.first_name }} owes ${{ debt.owes }}</li>
+		<li>{{ debt.first_name }} owes ${{ debt.owes|floatformat:"2g" }}</li>
 		{% endfor %}
 	</ul>
 </div>
 <div class="mycard">
-	{% include 'expense_table.html' %}
+{% include 'expense_table.html' %}
 </div>
 {% endblock %}

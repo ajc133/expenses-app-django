@@ -20,6 +20,7 @@ class ExpenseForm(forms.ModelForm):
         )
 
         # Restrict group choices to only those the current user belongs to
+        # FIXME: Only show users that are in current user's groups
         if group is not None:
             groups = Group.objects.filter(pk=group.id)
             self.fields["group"].queryset = groups
