@@ -38,13 +38,10 @@ def submit_expense(request: HttpRequest):
                     status=400,
                 )
             expense.save()
-            return redirect("group_expenses", expense.group_id)
+            return redirect("expense_submit")
 
     # FIXME: What if a user is in two groups
-    form = ExpenseForm(
-        initial={"payer": request.user, "group": default_group},
-        # group=default_group,
-    )
+    form = ExpenseForm(initial={"payer": request.user, "group": default_group})
 
     return render(request, "expense_submit.html", {"form": form})
 
