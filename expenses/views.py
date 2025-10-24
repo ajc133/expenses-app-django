@@ -49,6 +49,8 @@ def submit_expense(request: HttpRequest):
 @login_required
 def groups(request: HttpRequest):
     groups = request.user.groups.all().values("id", "name")
+    if len(groups) == 1:
+        return redirect("group_expenses", groups[0]["id"])
     context = {"title": "Groups", "details_url": "group_expenses", "objects": groups}
     return render(request, "basic_list.html", context)
 

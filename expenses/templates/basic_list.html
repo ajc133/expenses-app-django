@@ -5,15 +5,15 @@
 {% endblock %}
 
 {% block content %}
-<div class="mycard">
-	<ul>
-		{% for x in objects %}
-		<a href="{% url details_url x.id %}">
-			<li>{{ x.name }}</li>
-		</a>
-		{% empty %}
-			<li>Sorry, nothing found</li>
-		{% endfor %}
-	</ul>
+<div>
+<ul>
+	{% for x in objects %}
+	<a href="{% url details_url x.id %}">
+		<li>{{ x.name }}</li>
+	</a>
+	{% empty %}
+		<li>Sorry, nothing found</li>
+	{% endfor %}
+</ul>
 </div>
 {% endblock %}
