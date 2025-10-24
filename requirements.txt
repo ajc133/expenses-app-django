@@ -14,12 +14,29 @@ botocore==1.40.50 \
     # via
     #   boto3
     #   s3transfer
+crispy-bootstrap4==2025.6 \
+    --hash=sha256:64bf732b27690c7147bfaa154b4b690217bee81c71731daf5da73de00ee01943 \
+    --hash=sha256:69066c33fc9c8841cbd8741a7ec99ad9234f12877b4549490031a47c2c1abd79
+    # via expenses-app-django
 django==5.2.7 \
     --hash=sha256:59a13a6515f787dec9d97a0438cd2efac78c8aca1c80025244b0fe507fe0754b \
     --hash=sha256:e0f6f12e2551b1716a95a63a1366ca91bbcd7be059862c1b18f989b1da356cdd
     # via
+    #   crispy-bootstrap4
+    #   django-crispy-forms
+    #   django-debug-toolbar
     #   django-storages
     #   expenses-app-django
+django-crispy-forms==2.4 \
+    --hash=sha256:5a4b99876cfb1bdd3e47727731b6d4197c51c0da502befbfbec6a93010b02030 \
+    --hash=sha256:915e1ffdeb2987d78b33fabfeff8e5203c8776aa910a3a659a2c514ca125f3bd
+    # via
+    #   crispy-bootstrap4
+    #   expenses-app-django
+django-debug-toolbar==6.0.0 \
+    --hash=sha256:0cf2cac5c307b77d6e143c914e5c6592df53ffe34642d93929e5ef095ae56841 \
+    --hash=sha256:6eb9fa6f4a5884bf04004700ffb5a44043f1fff38784447fc52c1633448c8c14
+    # via expenses-app-django
 django-environ==0.12.0 \
     --hash=sha256:227dc891453dd5bde769c3449cf4a74b6f2ee8f7ab2361c93a07068f4179041a \
     --hash=sha256:92fb346a158abda07ffe6eb23135ce92843af06ecf8753f43adf9d2366dcc0ca
@@ -107,7 +124,9 @@ six==1.17.0 \
 sqlparse==0.5.3 \
     --hash=sha256:09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272 \
     --hash=sha256:cf2196ed3418f3ba5de6af7e82c694a9fbdbfecccdfc72e281548517081f16ca
-    # via django
+    # via
+    #   django
+    #   django-debug-toolbar
 tzdata==2025.2 ; sys_platform == 'win32' \
     --hash=sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8 \
     --hash=sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9
