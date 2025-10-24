@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block content %}
+<div class="mycard">
+<form action="{% url 'group_expenses' group.id %}">
+  <label for="fname">Search</label><br>
+  <input type="text" id="search" name="search"><br>
+  <input type="submit" value="Submit">
+</form>
+</div>
 <div>
 	<ul>
 		{% for debt in debts %}

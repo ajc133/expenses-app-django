@@ -58,6 +58,7 @@ def groups(request: HttpRequest):
 @login_required
 def group_expenses(request: HttpRequest, group_id: int):
     group = get_object_or_404(Group, pk=group_id)
+    search_string = request.GET.get("search")
 
     # Compute total expenses and per-person share
     total_cost = group.expenses.aggregate(total=Sum("cost"))["total"] or 0
@@ -70,13 +71,15 @@ def group_expenses(request: HttpRequest, group_id: int):
         .annotate(paid=Sum("expenses_paid__cost", filter=Q(expenses_paid__group=group)))
         .annotate(owes=per_person_share - F("paid"))
         .filter(owes__gt=0)
-        .values("first_name", "owes")
     )
 
     group_expenses = group.expenses.select_related("payer").all()
+    if search_string:
+        group_expenses = group_expenses.filter(item__icontains=search_string)
     context = {
+        "group_id": group.id,
         "expenses": group_expenses,
-        "debts": group_debts,
+        "debts": group_debts.values("first_name", "owes"),
         "group": group,
     }
 
