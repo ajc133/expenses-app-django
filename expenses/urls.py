@@ -1,10 +1,13 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
+from django.views.generic import RedirectView
 
 from . import views
 
 urlpatterns = [
+    path("", RedirectView.as_view(url="submit/")),
+    path("expenses/", RedirectView.as_view(url="groups/")),
     path("submit/", views.submit_expense, name="expense_submit"),
     path("groups/", views.groups, name="groups"),
     path("groups/<int:group_id>", views.group_expenses, name="group_expenses"),
