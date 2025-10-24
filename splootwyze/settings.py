@@ -59,6 +59,8 @@ if not DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
+    "crispy_forms",
+    "crispy_bootstrap4",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -190,3 +192,6 @@ WHITENOISE_ROOT = env("SPLOOTWYZE_WEB_ROOT")
 
 # django-debug-toolbar
 INTERNAL_IPS = ["127.0.0.1"]
+
+# crispy-forms
+CRISPY_TEMPLATE_PACK = "bootstrap4"
