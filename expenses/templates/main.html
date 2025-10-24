@@ -3,7 +3,7 @@
 <html>
 
 <head>
-	<title>{% block title %}{% endblock %}</title>
+	<title>Splootwyze</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href={% static "expenses/global.css" %} />
@@ -24,15 +24,13 @@
 <body>
 	<div class="topnav">
 		<div>
-			<h1>Splootwyze</h1>
+			<h1>{% block title %}{% endblock %}</h1>
 		</div>
 		<div>
-			<p><a href="{% url 'groups' %}">Groups</a></p> |
-
 			{% if user.is_authenticated %}
-			<p><a href="{% url 'expense_submit' %}">Submit Expense</a></p> |
-			<p>Welcome, {{ user.first_name }}</p> |
-			<p><a href="{% url 'logout' %}">Logout</a></p>
+			<p><a href="{% url 'groups' %}">Expenses</a></p> |
+			<p><a href="{% url 'expense_submit' %}"><strong>Submit</strong></a></p> |
+			<p>Hi {{ user.first_name }}</p>
 			{% else %}
 			<a href="{% url 'login' %}">LOGIN</a>
 			{% endif %}

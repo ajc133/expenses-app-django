@@ -1,11 +1,10 @@
 {% extends "main.html" %}
 
 {% block title %}
-Splootwyze
+{{ group.name }} expenses
 {% endblock %}
 
 {% block content %}
-	<h1>{{ group.name }}</h1>
 <div>
 	<ul>
 		{% for debt in debts %}
