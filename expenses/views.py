@@ -14,7 +14,7 @@ from .models import Expense, User
 @require_http_methods(["HEAD", "GET", "POST"])
 def submit_expense(request: HttpRequest):
     if request.method == "POST":
-        form = ExpenseForm(request.POST, request.FILES, user=request.user)
+        form = ExpenseForm(data=request.POST, files=request.FILES, user=request.user)
         if form.is_valid():
             expense = form.save(commit=False)
             expense.submitter = request.user
@@ -83,14 +83,17 @@ def expense_edit(request: HttpRequest, expense_id):
     expense = get_object_or_404(Expense, pk=expense_id)
     if request.method == "POST":
         form = ExpenseForm(
-            request.POST, request.FILES, user=request.user, instance=expense
+            user=request.user,
+            data=request.POST,
+            files=request.FILES,
+            instance=expense,
         )
         if form.is_valid():
             expense = form.save(commit=False)
             expense.submitter = request.user
             expense.save()
 
-            return redirect("expense_edit", expense.id)
+            return redirect("expense_details", expense.id)
     form = ExpenseForm(user=request.user, instance=expense)
 
     return render(request, "expense_edit.html", {"form": form})
