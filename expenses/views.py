@@ -2,17 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.db.models import F, Q, Sum
-from django.forms import ValidationError
-from django.http import (
-    HttpRequest,
-    HttpResponseRedirect,
-)
+from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
-from django.views.decorators.http import (
-    require_http_methods,
-    require_safe,
-)
+from django.views.decorators.http import require_http_methods, require_safe
 
 from .forms import ExpenseForm
 from .models import Expense, User
@@ -21,17 +13,18 @@ from .models import Expense, User
 @login_required
 @require_http_methods(["HEAD", "GET", "POST"])
 def submit_expense(request: HttpRequest):
-    default_group = request.user.groups.first()
     if request.method == "POST":
-        form = ExpenseForm(request.POST, request.FILES)
+        form = ExpenseForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             expense = form.save(commit=False)
             expense.submitter = request.user
             expense.save()
             return redirect("group_expenses", expense.group.id)
 
-    # FIXME: What if a user is in two groups
-    form = ExpenseForm(initial={"payer": request.user, "group": default_group})
+    initial = {"payer": request.user}
+    if request.user.groups.count() == 1:
+        initial["group"] = request.user.groups.first()
+    form = ExpenseForm(user=request.user, initial=initial)
 
     return render(request, "expense_submit.html", {"form": form})
 
@@ -89,14 +82,16 @@ def expense_details(request: HttpRequest, expense_id):
 def expense_edit(request: HttpRequest, expense_id):
     expense = get_object_or_404(Expense, pk=expense_id)
     if request.method == "POST":
-        form = ExpenseForm(request.POST, request.FILES, instance=expense)
+        form = ExpenseForm(
+            request.POST, request.FILES, user=request.user, instance=expense
+        )
         if form.is_valid():
             expense = form.save(commit=False)
             expense.submitter = request.user
             expense.save()
 
             return redirect("expense_edit", expense.id)
-    form = ExpenseForm(instance=expense)
+    form = ExpenseForm(user=request.user, instance=expense)
 
     return render(request, "expense_edit.html", {"form": form})
 
