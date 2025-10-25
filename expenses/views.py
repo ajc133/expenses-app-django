@@ -27,18 +27,8 @@ def submit_expense(request: HttpRequest):
         if form.is_valid():
             expense = form.save(commit=False)
             expense.submitter = request.user
-
-            try:
-                expense.full_clean()
-            except ValidationError as e:
-                return render(
-                    request,
-                    "400.html",
-                    context={"reason": e.message_dict},
-                    status=400,
-                )
             expense.save()
-            return redirect("expense_submit")
+            return redirect("group_expenses", expense.group.id)
 
     # FIXME: What if a user is in two groups
     form = ExpenseForm(initial={"payer": request.user, "group": default_group})
@@ -97,28 +87,12 @@ def expense_details(request: HttpRequest, expense_id):
 @require_http_methods(["HEAD", "GET", "POST"])
 @login_required
 def expense_edit(request: HttpRequest, expense_id):
-    # FIXME: store this in settings
     expense = get_object_or_404(Expense, pk=expense_id)
-    default_group = request.user.groups.first()
     if request.method == "POST":
-        form = ExpenseForm(
-            request.POST,
-            request.FILES,
-            group=default_group,
-        )
+        form = ExpenseForm(request.POST, request.FILES, instance=expense)
         if form.is_valid():
             expense = form.save(commit=False)
             expense.submitter = request.user
-
-            try:
-                expense.full_clean()
-            except ValidationError as e:
-                return render(
-                    request,
-                    "400.html",
-                    context={"reason": e.message_dict},
-                    status=400,
-                )
             expense.save()
 
             return redirect("expense_edit", expense.id)
