@@ -20,5 +20,6 @@ Details about {{ expense.item }}
 		<img src="{{ expense.receipt_photo.url }}" alt=" Receipt photo image" style="width:400px;">
 	</picture>
 	{% endif %}
+	<p><button><a style="color: red;" href={% url 'expense_delete' expense.id %}>Delete</a></button</p>
 </div>
 {% endblock %}

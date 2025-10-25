@@ -101,11 +101,15 @@ def expense_edit(request: HttpRequest, expense_id):
     return render(request, "expense_edit.html", {"form": form})
 
 
-@require_http_methods(["POST"])
+@require_http_methods(["HEAD", "GET", "POST"])
 @login_required
 def expense_delete(request: HttpRequest, expense_id):
-    Expense.objects.get(pk=expense_id).delete()
-    return HttpResponseRedirect(reverse("expenses"))
+    expense = get_object_or_404(Expense, pk=expense_id)
+    if request.method == "POST":
+        group_id = expense.group.id
+        expense.delete()
+        return redirect("group_expenses", group_id)
+    return render(request, "expense_delete.html", {"expense": expense})
 
 
 def login_view(request):

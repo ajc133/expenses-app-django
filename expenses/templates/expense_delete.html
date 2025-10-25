@@ -1,0 +1,21 @@
+{% extends "main.html" %}
+{% load tz %}
+
+{% block title %}
+Splootwyze
+{% endblock %}
+
+{% block content %}
+<div class="mycard">
+	<form method="post" action="{% url 'expense_delete' expense.id %}">
+	{% csrf_token %}
+	<h1>Delete {{ expense.item }}?</h1>
+	<button style="background-color: red;" type="submit">Delete</button>
+	</form>
+	<p>Cost: ${{ expense.cost }}</p>
+	<p>Bought by: {{ expense.payer.first_name }}</p>
+	<p>Submitted by: {{ expense.submitter.first_name }}</p>
+	<p>Created: {{ expense.created_at|timezone:"America/Los_Angeles" }} PT</p>
+	<p>Updated: {{ expense.updated_at|timezone:"America/Los_Angeles" }} PT</p>
+</div>
+{% endblock %}
