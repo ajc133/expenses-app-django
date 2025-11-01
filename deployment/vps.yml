@@ -8,8 +8,8 @@
     app_home: "/home/{{ app_user }}"
     app_repo: "{{ app_home }}/splootwyze.git"
     app_root: "{{ app_home }}/applicationroot"
-    backup_root: "/mnt/media-and-backups/backups"
-    media_root: "/srv/{{ app_user }}/media"
+    backup_root: "/mnt/media-and-backups/{{ app_user }}/backups"
+    media_root: "/mnt/media-and-backups/{{ app_user }}/media"
     static_root: "/srv/{{ app_user }}/staticfiles"
 
     packages:
@@ -26,9 +26,11 @@
       - /etc/systemd/system/caddy.service.d/
 
     app_dirs:
-      - "{{ backup_root }}/{{ app_user }}"
+      - "{{ backup_root }}"
       - "{{ media_root }}"
       - "{{ static_root }}"
+
+    db_path: "/var/lib/{{ app_user }}/db.sqlite3"
 
   tasks:
     - name: Install required packages
@@ -121,7 +123,7 @@
 
     - name: Deploy env configuration to services
       become: true
-      copy:
+      template:
         src: 50-splootwyze-env.conf
         dest: "{{ item }}"
       loop:
@@ -189,8 +191,8 @@
         content: |
           #!/bin/bash
           DATE=$(date +"%Y-%m-%d_%H-%M-%S")
-          BACKUP_FILE="{{ backup_root }}/{{ app_user }}/${DATE}.sqlite3"
-          sqlite3 /var/lib/{{ app_user }}/db.sqlite3 ".backup '$BACKUP_FILE'"
+          BACKUP_FILE="{{ backup_root }}/${DATE}.sqlite3"
+          sqlite3 {{ db_path }} ".backup '$BACKUP_FILE'"
 
     - name: Install backup service and timer
       become: true
