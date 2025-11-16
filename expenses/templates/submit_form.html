@@ -1,7 +1,7 @@
 {%load crispy_forms_tags %}
 {% load dj_spinners %}
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" id="form">
 	{% csrf_token %}
 	{{ form|crispy }}
 	<div id="spinner-div" style="display:none">
@@ -9,7 +9,7 @@
 	</div>
 
 	<div id="submit-div">
-    <button type="submit" onclick="showSpinner()">Submit</button>
+    <button type="submit">Submit</button>
 	</div>
 
 </form>
@@ -17,10 +17,17 @@
 function showSpinner(){
 	const spinnerDiv = document.getElementById("spinner-div")
 	const submitDiv = document.getElementById("submit-div")
-
 	spinnerDiv.style.display=(spinnerDiv.style.display=='none')?'inline':'none'
 	submitDiv.style.display=(submitDiv.style.display=='none')?'inline':'none'
 }
+document.getElementById("form").addEventListener("submit", function (e) {
+    if (submitting) {
+        e.preventDefault();
+        return;
+    }
+    submitting = true;
+    showSpinner();
+});
 
 </script>
 
