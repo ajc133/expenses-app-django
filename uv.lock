@@ -179,6 +179,18 @@ wheels = [
 ]
 
 [[package]]
+name = "dj-spinners"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ae/28/618d0d1a252d7d50a61d18cf7735ba5cc3653dcb3b9b23202eccdd53bc4c/dj_spinners-0.1.0.tar.gz", hash = "sha256:dfa4ae4ff2985849899d68881d70aced7ff95f3675d398f2a6a2f149e5f92a11", size = 10788, upload-time = "2025-10-23T12:12:03.889Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cd/c9/84a2af6c710ede5a416ad1cd9aba33715821cc0ca4e893ca850f7feaf1f4/dj_spinners-0.1.0-py3-none-any.whl", hash = "sha256:61a658a5bddaa8846fd7013fb22f0b423517c8cbe493b3cebb1f18e1c5203611", size = 28517, upload-time = "2025-10-23T12:12:02.081Z" },
+]
+
+[[package]]
 name = "django"
 version = "5.2.7"
 source = { registry = "https://pypi.org/simple" }
@@ -249,6 +261,7 @@ version = "1.1"
 source = { virtual = "." }
 dependencies = [
     { name = "crispy-bootstrap4" },
+    { name = "dj-spinners" },
     { name = "django" },
     { name = "django-crispy-forms" },
     { name = "django-debug-toolbar" },
@@ -268,6 +281,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "crispy-bootstrap4", specifier = ">=2025.6" },
+    { name = "dj-spinners", specifier = ">=0.1.0" },
     { name = "django", specifier = ">=5.1.6" },
     { name = "django-crispy-forms", specifier = ">=2.4" },
     { name = "django-debug-toolbar", specifier = ">=6.0.0" },

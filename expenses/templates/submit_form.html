@@ -1,6 +1,27 @@
 {%load crispy_forms_tags %}
+{% load dj_spinners %}
+
 <form method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	{{ form|crispy }}
-	<button type="submit">Submit</button>
+	<div id="spinner-div" style="display:none">
+	{% spinner '90-ring' %}
+	</div>
+
+	<div id="submit-div">
+    <button type="submit" onclick="showSpinner()">Submit</button>
+	</div>
+
+</form>
+<script>
+function showSpinner(){
+	const spinnerDiv = document.getElementById("spinner-div")
+	const submitDiv = document.getElementById("submit-div")
+
+	spinnerDiv.style.display=(spinnerDiv.style.display=='none')?'inline':'none'
+	submitDiv.style.display=(submitDiv.style.display=='none')?'inline':'none'
+}
+
+</script>
+
 </form>

@@ -9,6 +9,7 @@
     app_repo: "{{ app_home }}/splootwyze.git"
     app_root: "{{ app_home }}/applicationroot"
     backup_root: "/mnt/media-and-backups/{{ app_user }}/backups"
+    db_path: "/var/lib/{{ app_user }}/db.sqlite3"
     media_root: "/mnt/media-and-backups/{{ app_user }}/media"
     static_root: "/srv/{{ app_user }}/staticfiles"
 
@@ -30,7 +31,11 @@
       - "{{ media_root }}"
       - "{{ static_root }}"
 
-    db_path: "/var/lib/{{ app_user }}/db.sqlite3"
+    service_env:
+      SPLOOTWYZE_ALLOWED_HOSTS: "splootwyze.ajcajc.com"
+      SPLOOTWYZE_MEDIA_ROOT: "{{ media_root }}"
+      SPLOOTWYZE_SQLITE_PATH: "{{ db_path }}"
+      SPLOOTWYZE_STATIC_ROOT: "{{ static_root }}"
 
   tasks:
     - name: Install required packages
@@ -123,13 +128,19 @@
 
     - name: Deploy env configuration to services
       become: true
-      template:
-        src: 50-splootwyze-env.conf
-        dest: "{{ item }}"
+      copy:
+        content: |
+          [Service]
+          {% for key, value in service_env.items() %}
+          Environment={{ key }}="{{ value }}"
+          {% endfor %}
+        dest: "{{ item }}/50-splootwyze-env.conf"
       loop:
         - /etc/systemd/system/splootwyze.service.d/
         - /etc/systemd/system/caddy.service.d/
-      notify: reload caddy
+      notify:
+        - reload caddy
+        - restart splootwyze
 
     - name: Optionally configure systemd-creds secret key
       when: setup_creds | default(false)

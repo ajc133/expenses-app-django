@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "expenses",
+    "dj_spinners",
 ]
 
 MIDDLEWARE = [
