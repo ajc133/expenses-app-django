@@ -22,9 +22,9 @@
 <div class="mycard">
 	<div>
 	<p>
-	<a href="{% url 'group_expenses' group.id %}?search={{ search }}&page={{ page|add:"-1" }}">←</a>
+	<a href="{% url 'group_expenses' group.id %}?search={{ search|urlencode }}&page={{ page|add:"-1" }}">←</a>
 	<b>Page {{ page }}</b>
-	<a href="{% url 'group_expenses' group.id %}?search={{ search }}&page={{ page|add:"1" }}">→</a>
+	<a href="{% url 'group_expenses' group.id %}?search={{ search|urlencode }}&page={{ page|add:"1" }}">→</a>
 	</p>
 	</div>
 {% include 'expense_table.html' %}
