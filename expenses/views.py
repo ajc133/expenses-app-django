@@ -43,8 +43,8 @@ def groups(request: HttpRequest):
 @login_required
 def group_expenses(request: HttpRequest, group_id: int):
     group = get_object_or_404(Group, pk=group_id)
-    search_string = request.GET.get("search")
-    page_num = int(request.GET.get("page", 1))
+    search_string = request.GET.get("search", "")
+    page = int(request.GET.get("page", 1))
 
     # Compute total expenses and per-person share
     total_cost = group.expenses.aggregate(total=Sum("cost"))["total"] or 0
@@ -62,14 +62,16 @@ def group_expenses(request: HttpRequest, group_id: int):
     group_expenses = group.expenses.select_related("payer")
     if search_string:
         group_expenses = group_expenses.filter(item__icontains=search_string)
-    if page_num > 0:
-        first_idx = (page_num - 1) * PAGE_SIZE
+    if page > 0:
+        first_idx = (page - 1) * PAGE_SIZE
         group_expenses = group_expenses.all()[first_idx : first_idx + PAGE_SIZE]
     context = {
         "group_id": group.id,
         "expenses": group_expenses,
         "debts": group_debts.values("first_name", "owes"),
         "group": group,
+        "page": page,
+        "search": search_string,
     }
 
     return render(request, "group_expenses.html", context)

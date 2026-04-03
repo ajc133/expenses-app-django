@@ -9,7 +9,7 @@
 <form action="{% url 'group_expenses' group.id %}">
   <label for="fname">Search</label><br>
   <input type="text" id="search" name="search"><br>
-  <input type="submit" value="Submit">
+  <input type="submit" value="Search">
 </form>
 </div>
 <div>
@@ -20,6 +20,13 @@
 	</ul>
 </div>
 <div class="mycard">
+	<div>
+	<p>
+	<a href="{% url 'group_expenses' group.id %}?search={{ search }}&page={{ page|add:"-1" }}">←</a>
+	<b>Page {{ page }}</b>
+	<a href="{% url 'group_expenses' group.id %}?search={{ search }}&page={{ page|add:"1" }}">→</a>
+	</p>
+	</div>
 {% include 'expense_table.html' %}
 </div>
 {% endblock %}

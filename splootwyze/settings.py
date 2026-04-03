@@ -38,9 +38,9 @@ SECRET_KEY = env("SPLOOTWYZE_SECRET_KEY")
 
 LOGIN_URL = "login"
 
-LOGIN_REDIRECT_URL = "main"
+LOGIN_REDIRECT_URL = "login"
 
-LOGOUT_REDIRECT_URL = "main"
+LOGOUT_REDIRECT_URL = "login"
 
 MEDIA_URL = "media/"
 
