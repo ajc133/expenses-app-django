@@ -9,6 +9,8 @@ from django.views.decorators.http import require_http_methods, require_safe
 from .forms import ExpenseForm
 from .models import Expense, User
 
+PAGE_SIZE = 20
+
 
 @login_required
 @require_http_methods(["HEAD", "GET", "POST"])
@@ -42,6 +44,7 @@ def groups(request: HttpRequest):
 def group_expenses(request: HttpRequest, group_id: int):
     group = get_object_or_404(Group, pk=group_id)
     search_string = request.GET.get("search")
+    page_num = int(request.GET.get("page", 1))
 
     # Compute total expenses and per-person share
     total_cost = group.expenses.aggregate(total=Sum("cost"))["total"] or 0
@@ -56,9 +59,12 @@ def group_expenses(request: HttpRequest, group_id: int):
         .filter(owes__gt=0)
     )
 
-    group_expenses = group.expenses.select_related("payer").all()
+    group_expenses = group.expenses.select_related("payer")
     if search_string:
         group_expenses = group_expenses.filter(item__icontains=search_string)
+    if page_num > 0:
+        first_idx = (page_num - 1) * PAGE_SIZE
+        group_expenses = group_expenses.all()[first_idx : first_idx + PAGE_SIZE]
     context = {
         "group_id": group.id,
         "expenses": group_expenses,
